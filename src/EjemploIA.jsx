@@ -1,21 +1,44 @@
+// src/components/EjemploIA.jsx
 import { useState } from 'react';
+
+// 💡 PASO 1: Importar el hook genérico de peticiones y el servicio específico de la API.
 import useApi from './hooks/useApi';
 import { authService } from './services/funvalApi';
-//
+
 export default function EjemploIA() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  /**
+   * 💡 PASO 2: Inicializar el Hook `useApi`
+   * * 1. Pasamos la función asíncrona del servicio SIN ejecutarla (sin paréntesis): authService.login
+   * 2. Desestructuramos las variables de estado reactivas: { data, loading, error, execute }
+   * 3. ⚠️ BUENA PRÁCTICA: Renombramos 'execute' usando alias (ej. 'loginExecute') para que sea descriptivo,
+   * especialmente si usas múltiples hooks useApi en el mismo componente.
+   */
   const { loading, error, execute: loginExecute } = useApi(authService.login);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      /**
+       * 💡 PASO 3: Ejecutar la Petición
+       * * Llamamos a la función renombrada 'loginExecute' pasando los argumentos requeridos.
+       * El hook se encargará automáticamente de:
+       * - Poner 'loading' en true antes de empezar.
+       * - Guardar la respuesta en 'data' si todo sale bien.
+       * - Guardar el mensaje de error en 'error' si algo falla.
+       * - Apagar el 'loading' al finalizar.
+       */
       await loginExecute(email, password);
+      
+      // Si llega aquí, la petición fue exitosa (código 2xx)
       alert("¡Inicio de sesión correcto!");
+      
     } catch (err) {
-        console.error(err)
-      // El error ya queda capturado en el estado 'error' del hook
+      // El bloque catch local queda para flujos específicos del componente (ej. redirigir, limpiar inputs).
+      // No necesitas guardar el error en un estado local aquí, ¡el hook ya lo hizo por ti en la variable 'error'!
+      console.error("Error manejado localmente:", err);
     }
   };
 
@@ -66,14 +89,22 @@ export default function EjemploIA() {
             />
           </div>
 
-          {/* Caja de Error Dinámica (Usa los estilos semánticos de tu config) */}
+          {/**
+           * 💡 PASO 4: Renderizado de Errores
+           * * Usamos cortocircuito (&&) con la variable 'error' provista por el hook.
+           * Si la API devuelve un error, se renderizará este contenedor automáticamente.
+           */}
           {error && (
             <div className="p-md bg-error-container text-on-error-container rounded-default border border-error/20 flex items-center gap-sm">
               <span className="text-body-sm font-semibold">{error}</span>
             </div>
           )}
 
-          {/* Botón de Submit */}
+          {/**
+           * 💡 PASO 5: Feedback de Carga (UX)
+           * * Usamos la variable 'loading' para deshabilitar el botón y evitar peticiones dobles (spam de clicks),
+           * además de cambiar el texto del botón para que el usuario sepa que está pasando algo.
+           */}
           <button 
             type="submit" 
             disabled={loading}
