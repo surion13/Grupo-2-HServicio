@@ -1,4 +1,3 @@
-// src/services/funvalApi.js
 import axios from 'axios'
 
 const BASE_URL = ''
@@ -22,7 +21,7 @@ const ENDPOINTS = {
 // 1. Configuración de la instancia base de Axios
 const funvalServices = axios.create({
     baseURL: BASE_URL,
-    withCredentials: true, // 👈 CRUCIAL: Envía y recibe la cookie HTTPOnly (access_token) automáticamente
+    withCredentials: true, // 👈 CRUCIAL: Envía y recibe la cookie HTTPOnly, Requisito tecnico 1
     headers: {
         'Content-Type': 'application/json'
     }
