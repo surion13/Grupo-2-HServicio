@@ -1,10 +1,11 @@
-import DashboardStudent from "./pages/student/DashboardStudent";
+import DashboardAdmin from "./pages/admin/DashboardAdmin";
 
 function App() {
   return (
     <>
       <p>Grupo 2</p>
-      <DashboardStudent />
+
+      <DashboardAdmin />
     </>
   );
 }

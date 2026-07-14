@@ -1,18 +1,7 @@
-import { useState, useEffect } from "react";
+import FooterMobile from "../../components/common/FooterMobile";
+import Header from "../../components/common/Header";
 
 export default function DashboardStudent() {
-  // Estado para controlar el modo oscuro (Dark Mode)
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (darkMode) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, [darkMode]);
-
   // Datos mockeados para los reportes (siguiendo tu diseño original)
   const reportes = [
     {
@@ -54,35 +43,7 @@ export default function DashboardStudent() {
 
   return (
     <div className="min-h-screen bg-background text-on-background transition-colors duration-200">
-      {/* --- TopAppBar --- */}
-      <header className="bg-surface border-b border-outline-variant fixed top-0 w-full z-40 h-16 flex justify-between items-center px-margin-mobile md:px-margin-desktop">
-        <div className="flex items-center gap-md">
-          <button className="material-symbols-outlined text-primary cursor-pointer">
-            menu
-          </button>
-          <h1 className="text-headline-md font-bold text-primary">EduReport</h1>
-        </div>
-
-        <div className="flex items-center gap-md">
-          {/* Botón de cambio de tema (Sol / Luna) */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer p-xs rounded-full hover:bg-surface-container-high transition-colors"
-            title="Cambiar modo de color"
-          >
-            {darkMode ? "light_mode" : "dark_mode"}
-          </button>
-
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
-            <img
-              className="w-full h-full object-cover"
-              alt="Alejandro's profile portrait"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCMWPecmMLNvge6tCUWWlnibQESmiANPvAZlKtvkqvU9eZW0kHOeQR9Q_VmPBAAlFfs9K262QX7YrE50dWlrH24CB-VSaCBs-X0HZr5lOKU4F1JpI5TrnYdbN7i2WeTp7Vj690zJqnxkK56Mym8vzdYlLzj1tv5pjw8is7lq45Hg2xdE6noXF7fRRjcAUe8rmZ06qFShFzwLAubMClIpYzIdCwW19LBiQdLH4UWSQGIqveHUNqOkXekmaMWKATIly0xJBiaOQe3ys"
-            />
-          </div>
-        </div>
-      </header>
-
+      <Header />
       {/* --- Main Content --- */}
       <main className="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
         {/* Welcome Message */}
@@ -237,34 +198,7 @@ export default function DashboardStudent() {
           </div>
         </div>
       </main>
-
-      {/* --- BottomNavBar (Mobile only) --- */}
-      <nav className="fixed bottom-0 w-full z-50 bg-surface border-t border-outline-variant h-20 pb-safe px-2 flex justify-around items-center md:hidden rounded-t-xl">
-        <button className="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-95 transition-transform duration-150 cursor-pointer">
-          <span
-            className="material-symbols-outlined"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            home
-          </span>
-          <span className="text-label-sm mt-1">Home</span>
-        </button>
-        <button className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors px-4 py-1 cursor-pointer">
-          <span className="material-symbols-outlined">description</span>
-          <span className="text-label-sm mt-1">Reports</span>
-        </button>
-        <button className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors px-4 py-1 cursor-pointer">
-          <span className="material-symbols-outlined">add_circle</span>
-          <span className="text-label-sm mt-1">New</span>
-        </button>
-        <button className="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors px-4 py-1 cursor-pointer">
-          <span className="material-symbols-outlined">
-            admin_panel_settings
-          </span>
-          <span className="text-label-sm mt-1">Admin</span>
-        </button>
-      </nav>
-
+      <FooterMobile />
       {/* --- Floating Action Button (FAB) --- */}
       <div className="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40 hidden sm:block">
         <button className="bg-secondary shadow-lg hover:shadow-xl text-on-secondary w-14 h-14 rounded-xl flex items-center justify-center transition-all hover:-translate-y-1 active:scale-95 group cursor-pointer">
