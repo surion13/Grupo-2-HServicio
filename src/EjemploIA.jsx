@@ -48,7 +48,7 @@ export default function EjemploIA() {
     <div className="min-h-screen flex items-center justify-center bg-background text-on-background p-md transition-colors duration-300">
       
       <div className="w-full max-w-100 bg-surface-lowest border border-outline-variant rounded-lg p-lg shadow-md">
-        <div className='border border-2'>
+        <div className=' border-2'>
           <h2>Badge State</h2>
           <BadgeState estado={'APPROVED_PARTIAL'} />
 
