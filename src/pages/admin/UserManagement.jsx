@@ -6,20 +6,20 @@ import { useState } from "react";
 
 export default function UserManagment() {
   const { loading, error, execute: cargandoLista } = useApi(userService.list);
-  const [datos, setDatos] = useState(null);
+  const [datos, setDatos] = useState([]);
 
   useEffect(() => {
     async function traerDatos() {
       try {
         const usuarios = await cargandoLista();
         console.log(usuarios);
-        setDatos(usuarios);
+        setDatos(usuarios.items);
       } catch (error) {
         console.error(error);
       }
     }
     traerDatos();
-  }, [cargandoLista]);
+  }, []);
 
   return (
     <div className="flex flex-1 overflow-hidden">
@@ -154,8 +154,11 @@ export default function UserManagment() {
                 </thead>
                 <tbody className="divide-y divide-outline-variant">
                   {console.log(datos)}
-                  {datos.map((dato) => (
-                    <tr className="hover:bg-surface-container-low transition-colors group">
+                  {datos.map((dato, index) => (
+                    <tr
+                      key={index}
+                      className="hover:bg-surface-container-low transition-colors group"
+                    >
                       <td className="px-lg py-md">
                         <div className="flex items-center gap-md">
                           <div>
@@ -206,229 +209,9 @@ export default function UserManagment() {
                       </td>
                     </tr>
                   ))}
-                  {/* Row 2 */}
-                  <tr className="hover:bg-surface-container-low transition-colors group">
-                    <td className="px-lg py-md">
-                      <div className="flex items-center gap-md">
-                        <div className="w-10 h-10 rounded-full bg-tertiary-fixed-dim flex items-center justify-center text-on-tertiary-fixed font-bold">
-                          MV
-                        </div>
-                        <div>
-                          <p className="text-body-md font-semibold text-on-surface">
-                            Marta Villalobos
-                          </p>
-                          <p className="text-body-sm text-on-surface-variant md:hidden">
-                            marta.v@escuela.edu
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-lg py-md hidden md:table-cell">
-                      <span className="text-body-md text-on-surface-variant">
-                        marta.villalobos@escuela.edu
-                      </span>
-                    </td>
-                    <td className="px-lg py-md">
-                      <span className="soft-fill-amber px-sm py-xs rounded-full text-label-sm font-label-sm font-bold uppercase tracking-wider">
-                        Editor
-                      </span>
-                    </td>
-                    <td className="px-lg py-md text-right">
-                      <div className="flex justify-end gap-sm">
-                        <button
-                          className="p-sm text-primary hover:bg-primary-fixed-dim rounded-full transition-colors"
-                          title="Editar"
-                        >
-                          <span
-                            className="material-symbols-outlined"
-                            data-icon="edit"
-                          >
-                            edit
-                          </span>
-                        </button>
-                        <button
-                          className="p-sm text-error hover:bg-error-container rounded-full transition-colors"
-                          title="Eliminar"
-                        >
-                          <span
-                            className="material-symbols-outlined"
-                            data-icon="delete"
-                          >
-                            delete
-                          </span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  {/* Row 3 */}
-                  <tr className="hover:bg-surface-container-low transition-colors group">
-                    <td className="px-lg py-md">
-                      <div className="flex items-center gap-md">
-                        <div className="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold">
-                          JS
-                        </div>
-                        <div>
-                          <p className="text-body-md font-semibold text-on-surface">
-                            Jorge Soto
-                          </p>
-                          <p className="text-body-sm text-on-surface-variant md:hidden">
-                            jorge.s@escuela.edu
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-lg py-md hidden md:table-cell">
-                      <span className="text-body-md text-on-surface-variant">
-                        jorge.soto@escuela.edu
-                      </span>
-                    </td>
-                    <td className="px-lg py-md">
-                      <span className="bg-surface-container px-sm py-xs rounded-full text-label-sm font-label-sm font-bold text-outline-variant uppercase tracking-wider">
-                        Lector
-                      </span>
-                    </td>
-                    <td className="px-lg py-md text-right">
-                      <div className="flex justify-end gap-sm">
-                        <button
-                          className="p-sm text-primary hover:bg-primary-fixed-dim rounded-full transition-colors"
-                          title="Editar"
-                        >
-                          <span
-                            className="material-symbols-outlined"
-                            data-icon="edit"
-                          >
-                            edit
-                          </span>
-                        </button>
-                        <button
-                          className="p-sm text-error hover:bg-error-container rounded-full transition-colors"
-                          title="Eliminar"
-                        >
-                          <span
-                            className="material-symbols-outlined"
-                            data-icon="delete"
-                          >
-                            delete
-                          </span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  {/* Row 4 */}
-                  <tr className="hover:bg-surface-container-low transition-colors group">
-                    <td className="px-lg py-md">
-                      <div className="flex items-center gap-md">
-                        <div className="w-10 h-10 rounded-full bg-on-tertiary-container flex items-center justify-center text-tertiary font-bold">
-                          CP
-                        </div>
-                        <div>
-                          <p className="text-body-md font-semibold text-on-surface">
-                            Carmen Paz
-                          </p>
-                          <p className="text-body-sm text-on-surface-variant md:hidden">
-                            carmen.p@escuela.edu
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-lg py-md hidden md:table-cell">
-                      <span className="text-body-md text-on-surface-variant">
-                        carmen.paz@escuela.edu
-                      </span>
-                    </td>
-                    <td className="px-lg py-md">
-                      <span className="soft-fill-amber px-sm py-xs rounded-full text-label-sm font-label-sm font-bold uppercase tracking-wider">
-                        Editor
-                      </span>
-                    </td>
-                    <td className="px-lg py-md text-right">
-                      <div className="flex justify-end gap-sm">
-                        <button
-                          className="p-sm text-primary hover:bg-primary-fixed-dim rounded-full transition-colors"
-                          title="Editar"
-                        >
-                          <span
-                            className="material-symbols-outlined"
-                            data-icon="edit"
-                          >
-                            edit
-                          </span>
-                        </button>
-                        <button
-                          className="p-sm text-error hover:bg-error-container rounded-full transition-colors"
-                          title="Eliminar"
-                        >
-                          <span
-                            className="material-symbols-outlined"
-                            data-icon="delete"
-                          >
-                            delete
-                          </span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-
-                  {/* Row 5 */}
-                  <tr className="hover:bg-surface-container-low transition-colors group">
-                    <td className="px-lg py-md">
-                      <div className="flex items-center gap-md">
-                        <div className="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold">
-                          RT
-                        </div>
-                        <div>
-                          <p className="text-body-md font-semibold text-on-surface">
-                            Ricardo Tellez
-                          </p>
-                          <p className="text-body-sm text-on-surface-variant md:hidden">
-                            ricardo.t@escuela.edu
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-lg py-md hidden md:table-cell">
-                      <span className="text-body-md text-on-surface-variant">
-                        ricardo.tellez@escuela.edu
-                      </span>
-                    </td>
-                    <td className="px-lg py-md">
-                      <span className="soft-fill-rose px-sm py-xs rounded-full text-label-sm font-label-sm font-bold uppercase tracking-wider">
-                        Suspendido
-                      </span>
-                    </td>
-                    <td className="px-lg py-md text-right">
-                      <div className="flex justify-end gap-sm">
-                        <button
-                          className="p-sm text-primary hover:bg-primary-fixed-dim rounded-full transition-colors"
-                          title="Editar"
-                        >
-                          <span
-                            className="material-symbols-outlined"
-                            data-icon="edit"
-                          >
-                            edit
-                          </span>
-                        </button>
-                        <button
-                          className="p-sm text-error hover:bg-error-container rounded-full transition-colors"
-                          title="Eliminar"
-                        >
-                          <span
-                            className="material-symbols-outlined"
-                            data-icon="delete"
-                          >
-                            delete
-                          </span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
-
             {/* Pagination Desktop */}
             <div className="px-lg py-md bg-surface-container-low flex justify-between items-center border-t border-outline-variant">
               <span className="text-body-sm text-on-surface-variant">
