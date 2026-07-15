@@ -14,3 +14,17 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+## Guía rápida para tu equipo: "Cómo usar el useApi hook y funvalApi service"
+Si un desarrollador necesita, por ejemplo, crear una nueva categoría (categoryService.create), explícales que solo debe seguir estos 3 pasos rápidos:
+
+Importar el endpoint: import { categoryService } from './services/funvalApi'
+
+Instanciar el hook: ```javascript
+const { loading, error, execute: createCategory } = useApi(categoryService.create);
+
+Llamar la ejecución con sus parámetros: ```javascript
+await createCategory({ name: 'Nueva Categoría' });
+
+Referirse a /EjemploIA.jsx
