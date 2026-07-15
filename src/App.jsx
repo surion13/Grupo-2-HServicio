@@ -6,10 +6,7 @@ import RoleRoute from "./components/layout/RoleRoute"
 import DashboardAdmin from "./pages/admin/DashboardAdmin"
 import DashboardStudent from "./pages/student/DashboardStudent"
 
-
-
 function App() {
-
   return (
     <>
       <Routes>
@@ -34,7 +31,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

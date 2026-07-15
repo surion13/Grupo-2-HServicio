@@ -12,6 +12,7 @@ export default defineConfig({
         target: 'https://www.hs-api.devfunval.cloud',
         changeOrigin: true,
         secure: false,
+        cookieDomainRewrite:"localhost"//mantiene la cookie viva
       }
     }
   }
