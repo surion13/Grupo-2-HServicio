@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ToastContext } from "./ToastContext"; // Importamos el contexto desde su nuevo archivo
+import { ToastContext } from "./ToastContext";
 
 export function ToastProvider({ children }) {
     const [toasts, setToasts] = useState([]);
@@ -41,7 +41,7 @@ export function ToastProvider({ children }) {
             case "error":
                 return "error";
             case "warning":
-                return "warning"; // Rafa: Icono correcto para advertencias
+                return "warning";
             case "info":
             default:
                 return "info";

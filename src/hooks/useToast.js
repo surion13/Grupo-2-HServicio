@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ToastContext } from "../context/ToastContext"; // Apunta al archivo exclusivo del contexto
+import { ToastContext } from "../context/ToastContext";
 
 export function useToast() {
     const context = useContext(ToastContext);
