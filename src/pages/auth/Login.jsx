@@ -3,19 +3,45 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
+// Rafa: Importación limpia del hook independiente de notificaciones Toast
+import { useToast } from "../../hooks/useToast";
+
 export default function Login() {
+    // Rafa: Consumo del hook global de notificaciones
+    const { showToast } = useToast();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    // Rafa: Estado controlado para alternar la visibilidad de la contraseña de forma reactiva
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
     const { loading, error, login } = useContext(AuthContext);
     
+    //Agregando logica try catch para que las Toast notifications funcionen dinamicamente
     async function handleSubmit(e) {
         e.preventDefault()
+        try {
+            await login(email, password)
+            // Si el login es exitoso, disparamos un Toast de éxito (verde)
+            showToast("¡Inicio de sesión exitoso! Bienvenido.", "success");
+        } catch (error) {
+            // Extraemos el mensaje real que viene desde funvalApi ("Invalid email or password")
+            const apiMessage = error.response?.data?.detail || "Credenciales incorrectas";
+            
+            // CRÍTICO: Pasamos explícitamente el tipo "error" para que se pinte de color rojo
+            showToast(apiMessage, "error");
+        }
         
-        await login(email, password)
+        
     }
 
-    const showPassword = () => document.querySelector("#password").textContent = password 
+    //const showPassword = () => document.querySelector("#password").textContent = password 
+
+    //Rafa: modificando visbilidad de password para que se actualice:
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible((prev) => !prev);
+    };
 
     return (
         <article className="font-sans min-h-screen flex flex-col bg-background text-on-background">
@@ -62,10 +88,10 @@ export default function Login() {
                                     <span className="material-symbols-outlined text-[20px]">lock</span>
                                 </div>
 
-                                <input onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type="password"/>
-                                
-                                <button onClick={showPassword} className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button">
-                                    <span className="material-symbols-outlined text-[20px]" id="password-toggle-icon">visibility</span>
+                                <input onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type={isPasswordVisible ? "text" : "password"}/>{/* Cambiando el tipo de boton de password a button para que funcione la opcion de ocultar/mostrar el pw */}
+                                {/* usando la funcion toggle */}
+                                <button onClick={togglePasswordVisibility} className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button">
+                                    <span className="material-symbols-outlined text-[20px]" id="password-toggle-icon">{isPasswordVisible ? "visibility_off" :"visibility"}</span>
                                 </button>
                             </div>
                         </div>
