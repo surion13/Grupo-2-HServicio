@@ -19,7 +19,7 @@ export default function UserManagment() {
       }
     }
     traerDatos();
-  }, []);
+  }, [cargandoLista]);
 
   return (
     <div className="flex flex-1 overflow-hidden">
@@ -153,6 +153,7 @@ export default function UserManagment() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant">
+                  {console.log(datos)}
                   {datos.map((dato) => (
                     <tr className="hover:bg-surface-container-low transition-colors group">
                       <td className="px-lg py-md">

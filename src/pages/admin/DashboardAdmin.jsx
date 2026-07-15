@@ -1,31 +1,25 @@
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import FooterMobile from "../../components/common/FooterMobile";
 import Header from "../../components/common/Header";
+import { useLocation, Link } from "react-router-dom";
 
 function DashboardAdmin() {
-  const chartBars = [
-    { height: "45%", value: 12 },
-    { height: "60%", value: 18 },
-    { height: "35%", value: 8 },
-    { height: "80%", value: 24 },
-    { height: "55%", value: 15 },
-    { height: "90%", value: 28, current: true },
-    { height: "70%", value: 21 },
+  const { logout } = useContext(AuthContext);
+
+  const navItems = [
+    { label: "Dashboard", icon: "dashboard", path: "/dashboard" },
+    { label: "Student Records", icon: "group", path: "/students" },
+    { label: "Reports Queue", icon: "assignment_late", path: "/reports" },
+    {
+      label: "User Management",
+      icon: "manage_accounts",
+      path: "/user-managment",
+    },
+    { label: "Settings", icon: "settings", path: "/settings" },
   ];
 
-  const topPerformers = [
-    {
-      name: "Carlos Mendoza",
-      reports: "42 Reports Approved",
-      rating: "98%",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCu8FzP6KRzSeyyc262wi5sESsKTt5vzM2cjxHepQvDX5PnKEbZKhjZIC3g8hFdQdp0wU0Zpxlil-SaDs6ETT-1JgPWCXeaL4xOGhsfqSmkTCEc7JUP41hdTV3PMDkNPcvlN7B9fBb5tFM0fY7ARl6kt55Phc770xnNuWcvx6eZ18C35yV0SvzWh1Ei557c1gEaeRfmx81yPgje-aO3SwtK0NeEyZHw4JJgQEC1tHGf_MnpAkpwI_qdpPYjrRkFGWG5Rmbl7MHgcSo",
-    },
-    {
-      name: "Elena Rodriguez",
-      reports: "38 Reports Approved",
-      rating: "94%",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBha76kH-SzFB-Yc7nLXBteaWfJ6xv3zukD_vk9gsW17SKtepBY5EQc9jzwz4f_8U_OmHOkDxqOYjEl0mXn4AntDwS8QV_cKZT2oG1yNILdJKw7bPWhNxiEUsKBsREXkYDuPkiKWLSyeoSh2ZUB5diaykH623j-y05K0ZRVa8XJ3c2uam3xf6U-mR-OTTZHN8dRMYNhPqGtkzxqyknuCiqLaczADvctwWAvakDuV5DsSInLuZUu1r-h4DCNsHWOqogaqkvWfWDgN9A",
-    },
-  ];
+  const location = useLocation();
 
   const submissions = [
     {
@@ -53,32 +47,25 @@ function DashboardAdmin() {
         {/* Navigation Drawer (Desktop) */}
         <aside className="hidden md:flex flex-col h-screen w-72 bg-surface-container-low border-r border-outline-variant py-md z-40 shrink-0 mt-10">
           <nav className="flex-1 space-y-1">
-            <div className="bg-primary-container text-on-primary-container rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-md translate-x-1 transition-transform cursor-pointer">
-              <span className="material-symbols-outlined">dashboard</span>
-              <span className="text-label-md font-label-md">Dashboard</span>
-            </div>
-            {[
-              "Student Records",
-              "Reports Queue",
-              "User Management",
-              "Settings",
-            ].map((item, index) => {
-              const icons = [
-                "group",
-                "assignment_late",
-                "manage_accounts",
-                "settings",
-              ];
+            {navItems.map((item, index) => {
+              // Comprobamos si el enlace actual coincide con la URL del navegador
+              const isActive = location.pathname === item.path;
+
               return (
-                <div
+                <Link
                   key={index}
-                  className="text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-md cursor-pointer"
+                  to={item.path}
+                  className={
+                    isActive
+                      ? "bg-primary-container text-on-primary-container rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-md translate-x-1 transition-transform cursor-pointer"
+                      : "text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-md cursor-pointer"
+                  }
                 >
-                  <span className="material-symbols-outlined">
-                    {icons[index]}
+                  <span className="material-symbols-outlined">{item.icon}</span>
+                  <span className="text-label-md font-label-md">
+                    {item.label}
                   </span>
-                  <span className="text-label-md font-label-md">{item}</span>
-                </div>
+                </Link>
               );
             })}
           </nav>
@@ -124,12 +111,6 @@ function DashboardAdmin() {
                   <h3 className="text-headline-lg font-headline-lg text-on-surface">
                     24
                   </h3>
-                  <div className="flex items-center gap-xs text-error font-label-sm">
-                    <span className="material-symbols-outlined text-[16px]">
-                      trending_up
-                    </span>
-                    <span>+12% vs last week</span>
-                  </div>
                 </div>
                 <div className="w-12 h-12 rounded-lg bg-error-container flex items-center justify-center text-on-error-container">
                   <span
@@ -140,33 +121,6 @@ function DashboardAdmin() {
                   </span>
                 </div>
               </div>
-
-              {/* Metric 2 */}
-              <div className="glass-card p-lg rounded-xl flex items-start justify-between">
-                <div className="space-y-sm">
-                  <p className="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">
-                    Usuarios Activos
-                  </p>
-                  <h3 className="text-headline-lg font-headline-lg text-on-surface">
-                    1,482
-                  </h3>
-                  <div className="flex items-center gap-xs text-emerald-600 font-label-sm">
-                    <span className="material-symbols-outlined text-[16px]">
-                      trending_up
-                    </span>
-                    <span>+4% vs last week</span>
-                  </div>
-                </div>
-                <div className="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary-container">
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                  >
-                    group
-                  </span>
-                </div>
-              </div>
-
               {/* Metric 3 */}
               <div className="glass-card p-lg rounded-xl flex items-start justify-between sm:col-span-2 lg:col-span-1">
                 <div className="space-y-sm">
@@ -207,21 +161,6 @@ function DashboardAdmin() {
                     <option>Last 30 days</option>
                   </select>
                 </div>
-                <div className="h-64 flex items-end justify-between gap-sm pt-md">
-                  {chartBars.map((bar, index) => (
-                    <div
-                      key={index}
-                      className={`flex-1 rounded-t-lg relative group chart-bar transition-all ${bar.current ? "bg-primary" : "bg-primary/20 hover:bg-primary/40"}`}
-                      style={{ height: bar.height }}
-                    >
-                      <div
-                        className={`absolute -top-8 left-1/2 -translate-x-1/2 transition-opacity text-[10px] px-2 py-1 rounded ${bar.current ? "opacity-100 bg-primary text-on-primary" : "opacity-0 group-hover:opacity-100 bg-inverse-surface text-inverse-on-surface"}`}
-                      >
-                        {bar.value}
-                      </div>
-                    </div>
-                  ))}
-                </div>
                 <div className="flex justify-between text-label-sm text-outline px-1">
                   {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
                     (day) => (
@@ -232,7 +171,7 @@ function DashboardAdmin() {
               </div>
 
               {/* Quick Links / Recent Activity */}
-              <div className="space-y-md">
+              {/*  <div className="space-y-md">
                 <div className="glass-card rounded-xl p-lg">
                   <h3 className="text-label-md font-label-md text-on-surface-variant mb-md uppercase tracking-wider">
                     Quick Actions
@@ -262,40 +201,7 @@ function DashboardAdmin() {
                     ))}
                   </div>
                 </div>
-
-                <div className="glass-card rounded-xl p-lg flex-1">
-                  <div className="flex items-center justify-between mb-md">
-                    <h3 className="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">
-                      Top Performers
-                    </h3>
-                    <span className="material-symbols-outlined text-outline text-[20px]">
-                      more_vert
-                    </span>
-                  </div>
-                  <div className="space-y-md">
-                    {topPerformers.map((performer, i) => (
-                      <div key={i} className="flex items-center gap-md">
-                        <img
-                          alt={performer.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                          src={performer.img}
-                        />
-                        <div className="flex-1">
-                          <p className="text-body-sm font-label-md">
-                            {performer.name}
-                          </p>
-                          <p className="text-[12px] text-on-surface-variant">
-                            {performer.reports}
-                          </p>
-                        </div>
-                        <div className="text-emerald-600 font-bold text-sm">
-                          {performer.rating}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              </div> */}
             </section>
 
             {/* Submissions Table Section */}
