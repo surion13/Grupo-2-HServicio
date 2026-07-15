@@ -1,7 +1,11 @@
+import { useContext } from "react"
+import { AuthContext } from "../../context/AuthContext"
 import FooterMobile from "../../components/common/FooterMobile";
 import Header from "../../components/common/Header";
 
 function DashboardAdmin() {
+  const { logout } = useContext(AuthContext)
+  
   const chartBars = [
     { height: "45%", value: 12 },
     { height: "60%", value: 18 },
