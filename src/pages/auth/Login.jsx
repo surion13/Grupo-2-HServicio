@@ -35,6 +35,12 @@ export default function Login() {
         
         
     }
+    // Rafa: Función para autocompletar credenciales de prueba
+    const selectTestCredentials = (testEmail, testPassword) => {
+        setEmail(testEmail);
+        setPassword(testPassword);
+        showToast("Credenciales de prueba cargadas", "success");
+    };
 
     //const showPassword = () => document.querySelector("#password").textContent = password 
 
@@ -74,7 +80,7 @@ export default function Login() {
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-outline">
                                     <span className="material-symbols-outlined text-[20px]">mail</span>
                                 </div>
-                                <input onChange={e => setEmail(e.target.value)} className="block w-full pl-10 pr-3 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="email" name="email" placeholder="nombre@empresa.com" required="" type="email"/>
+                                <input value={email} onChange={e => setEmail(e.target.value)} className="block w-full pl-10 pr-3 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="email" name="email" placeholder="nombre@empresa.com" required="" type="email"/>
                             </div>
                         </div>
 
@@ -88,7 +94,7 @@ export default function Login() {
                                     <span className="material-symbols-outlined text-[20px]">lock</span>
                                 </div>
 
-                                <input onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type={isPasswordVisible ? "text" : "password"}/>{/* Cambiando el tipo de boton de password a button para que funcione la opcion de ocultar/mostrar el pw */}
+                                <input value={password} onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type={isPasswordVisible ? "text" : "password"}/>{/* Cambiando el tipo de boton de password a button para que funcione la opcion de ocultar/mostrar el pw */}
                                 {/* usando la funcion toggle */}
                                 <button onClick={togglePasswordVisibility} className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button">
                                     <span className="material-symbols-outlined text-[20px]" id="password-toggle-icon">{isPasswordVisible ? "visibility_off" :"visibility"}</span>
@@ -114,6 +120,30 @@ export default function Login() {
                                 </>
                             }
                         </button>
+
+                        {/* SECCIÓN DE CREDENCIALES DE PRUEBA */}
+                        <div className="mt-4 p-4 bg-surface-container-low rounded-lg border border-outline-variant space-y-2">
+                            <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider flex items-center gap-1.5">
+                                <span className="material-symbols-outlined text-[16px] text-primary">build</span>
+                                Acceso de prueba rápido
+                            </p>
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => selectTestCredentials("admin@funval.com", "1234567890")}
+                                    className="flex-1 py-1.5 px-3 text-xs font-medium bg-primary-container text-on-primary-container rounded-md hover:opacity-90 transition-opacity cursor-pointer border border-primary/20"
+                                >
+                                    🔑 Mod: Admin
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => selectTestCredentials("student@funval.com", "12345678")}
+                                    className="flex-1 py-1.5 px-3 text-xs font-medium bg-secondary-container text-on-secondary-container rounded-md hover:opacity-90 transition-opacity cursor-pointer border border-secondary/20"
+                                >
+                                    🎓 Mod: Estudiante
+                                </button>
+                            </div>
+                        </div>
 
                         {/* <!-- Create Account Link --> */}
                         <div className="text-center mt-stack-lg pt-stack-md border-t border-surface-variant">

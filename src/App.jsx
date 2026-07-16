@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
 
         <Route element={<PrivateRoute />} >
           <Route element={<RoleRoute roleUser="ADMIN" />}>
