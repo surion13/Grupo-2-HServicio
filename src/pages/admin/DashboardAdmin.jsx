@@ -3,9 +3,44 @@ import { AuthContext } from "../../context/AuthContext";
 import FooterMobile from "../../components/common/FooterMobile";
 import Header from "../../components/common/Header";
 import { useLocation, Link } from "react-router-dom";
+import useApi from "../../hooks/useApi";
+import { dashboardService, reportService } from "../../services/funvalApi";
+import { useState } from "react";
+import { useEffect } from "react";
 
 function DashboardAdmin() {
   const { logout } = useContext(AuthContext);
+
+  const {
+    loading,
+    error,
+    execute: dashboard,
+  } = useApi(dashboardService.getStats);
+
+  const { execute: reportes } = useApi(reportService.list);
+
+  const [datos, setDatos] = useState([]);
+  const [reports, setReports] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [pendientes, setPendientes] = useState([]);
+
+  useEffect(() => {
+    async function traerDatos() {
+      try {
+        const response = await dashboard();
+        const data = await reportes();
+        setDatos(response.users);
+        setReports(response.reports);
+        setCourses(response.top_courses);
+        setCategory(response.top_categories);
+        setPendientes(data.items);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    traerDatos();
+  }, []);
 
   const navItems = [
     { label: "Dashboard", icon: "dashboard", path: "/dashboard-admin" },
@@ -23,57 +58,32 @@ function DashboardAdmin() {
 
   const statsCards = [
     {
-      title: "Total Usuarios",
-      value: "1,248",
-      change: "+12% este mes",
+      title: "Estudiantes",
+      value: datos.total_students,
+      change: "0 estudiantes nuevos",
       icon: "group",
       iconColor: "bg-primary-container text-on-primary-container",
     },
     {
       title: "Total Reportes",
-      value: "85",
-      change: "12 pendientes de revisión",
+      value: reports.total,
+      change: `${reports.pending} reportes pendientes`,
       icon: "assignment_late",
       iconColor: "bg-error-container text-on-error-container",
     },
     {
       title: "Cursos Activos",
-      value: "18",
-      change: "4 nuevos este ciclo",
+      value: courses.length,
+      change: "3 cursos nuevos en proceso",
       icon: "school",
       iconColor: "bg-secondary-container text-on-secondary-container",
     },
     {
       title: "Categorías Activas",
-      value: "6",
-      change: "Infraestructura, Conducta, etc.",
+      value: category.length,
+      change: `${category[0]?.name}, ${category[1]?.name}, etc..`,
       icon: "category",
       iconColor: "bg-surface-container-highest text-on-surface-variant",
-    },
-  ];
-
-  const pendingReports = [
-    {
-      id: "REP-094",
-      student: "Lucas Benítez",
-      category: "Infraestructura",
-      date: "Hace 10 mins",
-      description: "Filtración de agua detectada en el laboratorio de química.",
-    },
-    {
-      id: "REP-093",
-      student: "Sofía Altamirano",
-      category: "Conducta",
-      date: "Hace 1 hora",
-      description: "Inasistencia reiterada y falta de entrega de asignaciones.",
-    },
-    {
-      id: "REP-092",
-      student: "Mateo Salazar",
-      category: "Académico",
-      date: "Ayer",
-      description:
-        "Problema técnico con el acceso a la plataforma de exámenes.",
     },
   ];
 
@@ -81,7 +91,6 @@ function DashboardAdmin() {
     <div className="flex flex-col h-screen overflow-hidden bg-background text-on-background">
       {/* Header Fijo */}
       <Header />
-
       {/* Contenedor del Layout - pt-16 compensa exactamente el alto del Header (h-16) */}
       <div className="flex flex-1 pt-16 overflow-hidden">
         {/* Navigation Drawer (Desktop) - Alto dinámico exacto sin mt extra */}
@@ -161,7 +170,7 @@ function DashboardAdmin() {
             <section className="space-y-stack-md mt-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-headline-sm text-on-surface font-semibold">
-                  Reportes pendientes de revisión
+                  Estado de reportes
                 </h3>
                 <Link
                   to="/reports"
@@ -175,24 +184,24 @@ function DashboardAdmin() {
               </div>
 
               <div className="grid grid-cols-1 gap-stack-sm mt-4">
-                {pendingReports.map((report) => (
+                {pendientes.map((report, index) => (
                   <div
-                    key={report.id}
+                    key={index}
                     className="bg-surface-container-lowest border border-outline-variant p-card rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-md hover:border-outline transition-colors"
                   >
                     {/* Report Info */}
                     <div className="space-y-1 max-w-2xl">
                       <div className="flex items-center gap-xs flex-wrap">
                         <span className="text-label-sm font-bold text-outline">
-                          {report.id}
+                          {report.student?.full_name}
                         </span>
                         <span className="text-outline-variant">•</span>
                         <span className="text-body-sm font-semibold text-on-surface">
-                          {report.student}
+                          {report.student.document_number}
                         </span>
                         <span className="text-outline-variant">•</span>
                         <span className="text-body-sm text-on-surface-variant">
-                          {report.category}
+                          {report.category.name}
                         </span>
                       </div>
                       <p className="text-body-md text-on-surface line-clamp-1">
@@ -203,10 +212,10 @@ function DashboardAdmin() {
                     {/* Report Status */}
                     <div className="flex items-center justify-between sm:justify-end gap-md shrink-0">
                       <span className="text-label-sm text-outline">
-                        {report.date}
+                        {report.updated_at}
                       </span>
                       <span className="bg-status-pending-bg text-status-pending-text px-sm py-1 rounded-full text-label-sm font-bold uppercase tracking-wider">
-                        PENDING
+                        {report.status}
                       </span>
                     </div>
                   </div>
