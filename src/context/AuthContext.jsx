@@ -1,4 +1,3 @@
-
 import { useState, createContext } from "react";
 import useApi from "../hooks/useApi";
 import { authService, profileService } from "../services/funvalApi";
@@ -7,63 +6,62 @@ import { useNavigate } from "react-router-dom";
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-    const navigate = useNavigate();
-    const { loading, error, execute: loginExecute } = useApi(authService.login)
-    const { execute: authExecute } = useApi(profileService.getMe)
-    const {execute: cerrarSesion} = useApi(authService.logout)
-    
-    const [auth, setAuth] = useState(null);
-    const [user, setUser] = useState(null);
-    const [role, setRole] = useState(null);
+  const navigate = useNavigate();
+  const { loading, error, execute: loginExecute } = useApi(authService.login);
+  const { execute: authExecute } = useApi(profileService.getMe);
+  const { execute: cerrarSesion } = useApi(authService.logout);
 
-    async function login(email, password) {
-        try {
-            const apiLogin = await loginExecute(email, password)
-            
-            if(!apiLogin) return
-            
-            const authme = await authExecute(apiLogin.access_token)
+  const [auth, setAuth] = useState(null);
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
 
-            if(!authme) return
+  async function login(email, password) {
+    try {
+      const apiLogin = await loginExecute(email, password);
 
-            setUser(authme.email)
-            setRole(authme.role)
+      if (!apiLogin) return;
 
-            setAuth(authme)
+      const authme = await authExecute(apiLogin.access_token);
 
-            if (authme.role === "ADMIN") {
-                navigate("/dashboard-admin")
-            } else {
-                navigate("/dashboard-student")
-            }
+      if (!authme) return;
 
+      setUser(authme.email);
+      setRole(authme.role);
         } catch (error) {
             console.error("error al loguear: ", error)
             throw error;//Rafa: para que al fallar las notificaciones Toast usen el error.
         }
     }
 
-    const isAuthenticated = () => {
-        if (auth) {
-            return true
-        } else {
-            return navigate("/login");
-        }
+      setAuth(authme);
+
+      if (authme.role === "ADMIN") {
+        navigate("/dashboard-admin");
+      } else {
+        navigate("/dashboard-student");
+      }
+    } catch (error) {
+      console.error("error al loguear: ", error);
     }
+  }
 
-    const logout = () => {
-        setAuth(null)
-        cerrarSesion()
-        navigate("/login")
+  const isAuthenticated = () => {
+    if (auth) {
+      return true;
+    } else {
+      return navigate("/");
     }
+  };
 
-    const value = { user, role, loading, error, isAuthenticated, login, logout }
+  const logout = () => {
+    setAuth(null);
+    cerrarSesion();
+    navigate("/");
+  };
 
-    return (
-        <AuthContext.Provider value={value}>
-            { children }
-        </AuthContext.Provider>
-    )
+  const value = { user, role, loading, error, isAuthenticated, login, logout };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export { AuthContext, AuthProvider }
+export { AuthContext, AuthProvider };
