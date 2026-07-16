@@ -6,6 +6,8 @@ import RoleRoute from "./components/layout/RoleRoute"
 import DashboardAdmin from "./pages/admin/DashboardAdmin"
 import DashboardStudent from "./pages/student/DashboardStudent"
 
+import Categories from "./pages/admin/Categories" //aqui se importa
+
 function App() {
   return (
     <>
@@ -18,6 +20,11 @@ function App() {
               path="/dashboard-admin"
               element={<DashboardAdmin />} 
             />
+
+            //aqui se agrega la ruta componente Categorias
+            <Route path="/admin/categorias" element={<Categories />} />
+
+
           </Route>
 
           <Route element={<RoleRoute roleUser="STUDENT" />}>

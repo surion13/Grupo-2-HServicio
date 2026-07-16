@@ -1,7 +1,11 @@
 import { useContext } from "react"
+
+import {Link} from "react-router-dom"
+
 import { AuthContext } from "../../context/AuthContext"
 import FooterMobile from "../../components/common/FooterMobile";
 import Header from "../../components/common/Header";
+
 
 function DashboardAdmin() {
   const { logout } = useContext(AuthContext)
@@ -264,6 +268,26 @@ function DashboardAdmin() {
                         </span>
                       </a>
                     ))}
+
+                    
+                      <Link
+                      to="/admin/categorias"
+                      className="flex items-center justify-between p-md rounded-lg hover:bg-primary-container hover:text-on-primary-container group transition-all border border-outline-variant"
+                    >
+                      <div className="flex items-center gap-md">
+                        <span className="material-symbols-outlined text-primary group-hover:text-on-primary-container">
+                          category
+                        </span>
+                        <span className="text-body-sm font-label-md">
+                          Gestión de Categorías
+                        </span>
+                      </div>
+                      <span className="material-symbols-outlined text-[20px]">
+                        chevron_right
+                      </span>
+                    </Link>
+
+
                   </div>
                 </div>
 
