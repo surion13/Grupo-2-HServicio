@@ -119,7 +119,7 @@ function DashboardAdmin() {
             })}
           </nav>
         </aside>
-
+        {console.log(category)}
         {/* Main Content Area - Scroll independiente */}
         <div className="flex-1 flex flex-col h-[calc(100vh-64px)] overflow-y-auto min-w-0">
           {/* Main Section */}
