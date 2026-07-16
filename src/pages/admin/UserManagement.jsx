@@ -309,7 +309,7 @@ export default function UserManagment() {
 
       {/* Toast Notification */}
       <div
-        className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-lg py-md rounded-lg shadow-xl hidden z-[60] flex items-center gap-md"
+        className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-lg py-md rounded-lg shadow-xl hidden z-60 flex items-center gap-md"
         id="toast"
       >
         <span

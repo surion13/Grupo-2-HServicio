@@ -4,7 +4,7 @@ import FooterMobile from "../../components/common/FooterMobile";
 import Header from "../../components/common/Header";
 import { useLocation, Link } from "react-router-dom";
 import useApi from "../../hooks/useApi";
-import { dashboardService } from "../../services/funvalApi";
+import { dashboardService, reportService } from "../../services/funvalApi";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -17,19 +17,24 @@ function DashboardAdmin() {
     execute: dashboard,
   } = useApi(dashboardService.getStats);
 
+  const { execute: reportes } = useApi(reportService.list);
+
   const [datos, setDatos] = useState([]);
   const [reports, setReports] = useState([]);
   const [courses, setCourses] = useState([]);
   const [category, setCategory] = useState([]);
+  const [pendientes, setPendientes] = useState([]);
 
   useEffect(() => {
     async function traerDatos() {
       try {
         const response = await dashboard();
+        const data = await reportes();
         setDatos(response.users);
         setReports(response.reports);
         setCourses(response.top_courses);
         setCategory(response.top_categories);
+        setPendientes(data.items);
       } catch (error) {
         console.error(error);
       }
@@ -82,7 +87,7 @@ function DashboardAdmin() {
     },
   ];
 
-  const pendingReports = [
+  /*   const pendingReports = [
     {
       id: "REP-094",
       student: "Lucas Benítez",
@@ -105,7 +110,7 @@ function DashboardAdmin() {
       description:
         "Problema técnico con el acceso a la plataforma de exámenes.",
     },
-  ];
+  ]; */
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-background text-on-background">
@@ -190,7 +195,7 @@ function DashboardAdmin() {
             <section className="space-y-stack-md mt-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-headline-sm text-on-surface font-semibold">
-                  Reportes pendientes de revisión
+                  Estado de reportes
                 </h3>
                 <Link
                   to="/reports"
@@ -204,24 +209,24 @@ function DashboardAdmin() {
               </div>
 
               <div className="grid grid-cols-1 gap-stack-sm mt-4">
-                {pendingReports.map((report) => (
+                {pendientes.map((report, index) => (
                   <div
-                    key={report.id}
+                    key={index}
                     className="bg-surface-container-lowest border border-outline-variant p-card rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-md hover:border-outline transition-colors"
                   >
                     {/* Report Info */}
                     <div className="space-y-1 max-w-2xl">
                       <div className="flex items-center gap-xs flex-wrap">
                         <span className="text-label-sm font-bold text-outline">
-                          {report.id}
+                          {report.student?.full_name}
                         </span>
                         <span className="text-outline-variant">•</span>
                         <span className="text-body-sm font-semibold text-on-surface">
-                          {report.student}
+                          {report.student.document_number}
                         </span>
                         <span className="text-outline-variant">•</span>
                         <span className="text-body-sm text-on-surface-variant">
-                          {report.category}
+                          {report.category.name}
                         </span>
                       </div>
                       <p className="text-body-md text-on-surface line-clamp-1">
@@ -232,10 +237,10 @@ function DashboardAdmin() {
                     {/* Report Status */}
                     <div className="flex items-center justify-between sm:justify-end gap-md shrink-0">
                       <span className="text-label-sm text-outline">
-                        {report.date}
+                        {report.updated_at}
                       </span>
                       <span className="bg-status-pending-bg text-status-pending-text px-sm py-1 rounded-full text-label-sm font-bold uppercase tracking-wider">
-                        PENDING
+                        {report.status}
                       </span>
                     </div>
                   </div>
