@@ -1,7 +1,10 @@
 import FooterMobile from "../../components/common/FooterMobile";
+import PdfUploader from "../../components/reports/PdfUploader";
+import { useState } from "react";
 import Header from "../../components/common/Header";
 
 export default function DashboardStudent() {
+  const [showUploader, setShowUploader] = useState(false);
   // Datos mockeados para los reportes (siguiendo tu diseño original)
   const reportes = [
     {
@@ -40,12 +43,18 @@ export default function DashboardStudent() {
         return "bg-surface-container text-on-surface";
     }
   };
+  const handleUploadSuccess = (data) => {
+    console.log("¡Archivo subido con éxito!", data);
+    alert("El reporte se ha enviado correctamente al servidor.");
+    setShowUploader(false); // Ocultar después de subir con éxito
+  };
 
   return (
     <div className="min-h-screen bg-background text-on-background transition-colors duration-200">
       <Header />
+
       {/* --- Main Content --- */}
-      <main className="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
+      <main className="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
         {/* Welcome Message */}
         <section className="mb-lg">
           <h2 className="text-headline-lg-mobile md:text-headline-lg text-primary">
@@ -56,6 +65,25 @@ export default function DashboardStudent() {
             recientes.
           </p>
         </section>
+        {/* --- Sección de Prueba Dinámica de PDF --- */}
+        {showUploader && (
+          <section className="mb-lg p-lg bg-surface border border-primary/30 rounded-xl shadow-inner relative">
+            <button
+              onClick={() => setShowUploader(false)}
+              className="absolute top-4 right-4 text-on-surface-variant hover:text-error cursor-pointer"
+            >
+              Cerrar (X)
+            </button>
+            <h3 className="text-headline-sm text-primary mb-md">
+              Subir Reporte PDF de Prueba
+            </h3>
+            <div className="max-w-xl mx-auto">
+              {/* 👉 RETIRAMOS entityId="1" para que funcione en modo CREACIÓN (POST)
+               */}
+              <PdfUploader onUploadSuccess={handleUploadSuccess} />
+            </div>
+          </section>
+        )}
 
         {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-lg">
@@ -118,7 +146,10 @@ export default function DashboardStudent() {
           </div>
 
           {/* Nuevo Reporte Primary Card */}
-          <div className="md:col-span-8 bg-primary-container text-on-primary-container rounded-xl p-lg flex flex-col justify-between relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md">
+          <div
+            onClick={() => setShowUploader(true)}
+            className="md:col-span-8 bg-primary-container text-on-primary-container rounded-xl p-lg flex flex-col justify-between relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md"
+          >
             <div className="absolute -right-12 -top-12 w-64 h-64 bg-primary opacity-20 rounded-full group-hover:scale-110 transition-transform"></div>
 
             <div className="relative z-10">
@@ -140,7 +171,13 @@ export default function DashboardStudent() {
             </div>
 
             <div className="relative z-10 mt-lg flex justify-end">
-              <button className="bg-white text-primary font-bold px-lg py-md rounded-full shadow-sm hover:bg-surface-bright transition-colors flex items-center gap-sm cursor-pointer">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowUploader(true);
+                }}
+                className="bg-white text-primary font-bold px-lg py-md rounded-full shadow-sm hover:bg-surface-bright transition-colors flex items-center gap-sm cursor-pointer"
+              >
                 Comenzar Ahora
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>
@@ -154,7 +191,7 @@ export default function DashboardStudent() {
                 Mis Reportes Recientes
               </h3>
               <button className="text-primary font-label-md hover:underline flex items-center gap-xs cursor-pointer">
-                Ver todos
+                Ver todos{" "}
                 <span className="material-symbols-outlined text-[18px]">
                   open_in_new
                 </span>
@@ -199,14 +236,6 @@ export default function DashboardStudent() {
         </div>
       </main>
       <FooterMobile />
-      {/* --- Floating Action Button (FAB) --- */}
-      <div className="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40 hidden sm:block">
-        <button className="bg-secondary shadow-lg hover:shadow-xl text-on-secondary w-14 h-14 rounded-xl flex items-center justify-center transition-all hover:-translate-y-1 active:scale-95 group cursor-pointer">
-          <span className="material-symbols-outlined text-[28px] group-hover:rotate-90 transition-transform">
-            add
-          </span>
-        </button>
-      </div>
     </div>
   );
 }
