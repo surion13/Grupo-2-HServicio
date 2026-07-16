@@ -49,30 +49,32 @@ function AuthProvider({ children }) {
             
             const authme = await authExecute(apiLogin.access_token)
 
-  async function login(email, password) {
-    try {
-      const apiLogin = await loginExecute(email, password);
+            if(!authme) return
 
-      if (!apiLogin) return;
+            setUser(authme.email)
+            setRole(authme.role)
 
-      const authme = await authExecute(apiLogin.access_token);
+            setAuth(authme)
 
-      if (!authme) return;
+            if (authme.role === "ADMIN") {
+                navigate("/dashboard-admin")
+            } else {
+                navigate("/dashboard-student")
+            }
 
-      setUser(authme.email);
-      setRole(authme.role);
-
-      setAuth(authme);
-
-      if (authme.role === "ADMIN") {
-        navigate("/dashboard-admin");
-      } else {
-        navigate("/dashboard-student");
-      }
-    } catch (error) {
-      console.error("error al loguear: ", error);
+        } catch (error) {
+            console.error("error al loguear: ", error)
+            throw error;//Rafa: para que al fallar las notificaciones Toast usen el error.
+        }
     }
-  }
+
+    const isAuthenticated = () => {
+        if (auth) {
+            return true
+        } else {
+            return navigate("/login");
+        }
+    }
 
     const logout = async () => {
         try{
@@ -109,4 +111,4 @@ const loading = loginLoading|| inicializado
     )
 }
 
-export { AuthContext, AuthProvider };
+export { AuthContext, AuthProvider }
