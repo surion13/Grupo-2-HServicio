@@ -7,6 +7,7 @@ import useApi from "../../hooks/useApi";
 import { dashboardService, reportService } from "../../services/funvalApi";
 import { useState } from "react";
 import { useEffect } from "react";
+import BadgeState from "../../components/common/BadgeState";
 
 function DashboardAdmin() {
   const { logout } = useContext(AuthContext);
@@ -184,42 +185,42 @@ function DashboardAdmin() {
               </div>
 
               <div className="grid grid-cols-1 gap-stack-sm mt-4">
-                {pendientes.map((report, index) => (
-                  <div
-                    key={index}
-                    className="bg-surface-container-lowest border border-outline-variant p-card rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-md hover:border-outline transition-colors"
-                  >
-                    {/* Report Info */}
-                    <div className="space-y-1 max-w-2xl">
-                      <div className="flex items-center gap-xs flex-wrap">
-                        <span className="text-label-sm font-bold text-outline">
-                          {report.student?.full_name}
-                        </span>
-                        <span className="text-outline-variant">•</span>
-                        <span className="text-body-sm font-semibold text-on-surface">
-                          {report.student.document_number}
-                        </span>
-                        <span className="text-outline-variant">•</span>
-                        <span className="text-body-sm text-on-surface-variant">
-                          {report.category.name}
-                        </span>
+                {pendientes
+                  .filter((report) => report.status === "PENDING")
+                  .map((report, index) => (
+                    <div
+                      key={index}
+                      className="bg-surface-container-lowest border border-outline-variant p-card rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-md hover:border-outline transition-colors"
+                    >
+                      {/* Report Info */}
+                      <div className="space-y-1 max-w-2xl">
+                        <div className="flex items-center gap-xs flex-wrap">
+                          <span className="text-label-sm font-bold text-outline">
+                            {report.student?.full_name}
+                          </span>
+                          <span className="text-outline-variant">•</span>
+                          <span className="text-body-sm font-semibold text-on-surface">
+                            {report.student.document_number}
+                          </span>
+                          <span className="text-outline-variant">•</span>
+                          <span className="text-body-sm text-on-surface-variant">
+                            {report.category.name}
+                          </span>
+                        </div>
+                        <p className="text-body-md text-on-surface line-clamp-1">
+                          {report.description}
+                        </p>
                       </div>
-                      <p className="text-body-md text-on-surface line-clamp-1">
-                        {report.description}
-                      </p>
-                    </div>
 
-                    {/* Report Status */}
-                    <div className="flex items-center justify-between sm:justify-end gap-md shrink-0">
-                      <span className="text-label-sm text-outline">
-                        {report.updated_at}
-                      </span>
-                      <span className="bg-status-pending-bg text-status-pending-text px-sm py-1 rounded-full text-label-sm font-bold uppercase tracking-wider">
-                        {report.status}
-                      </span>
+                      {/* Report Status */}
+                      <div className="flex items-center justify-between sm:justify-end gap-md shrink-0">
+                        <span className="text-label-sm text-outline">
+                          {report.updated_at}
+                        </span>
+                        <BadgeState estado={report.status} />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </section>
           </main>
