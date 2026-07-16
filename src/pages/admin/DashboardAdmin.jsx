@@ -8,7 +8,7 @@ function DashboardAdmin() {
   const { logout } = useContext(AuthContext);
 
   const navItems = [
-    { label: "Dashboard", icon: "dashboard", path: "/dashboard" },
+    { label: "Dashboard", icon: "dashboard", path: "/dashboard-admin" },
     { label: "Student Records", icon: "group", path: "/students" },
     { label: "Reports Queue", icon: "assignment_late", path: "/reports" },
     {
@@ -21,255 +21,206 @@ function DashboardAdmin() {
 
   const location = useLocation();
 
-  const submissions = [
+  const statsCards = [
     {
-      initialcheck: "JM",
-      name: "Juan Martínez",
-      date: "Oct 24, 2023",
-      subject: "Math Dept Survey",
-      status: "Pending",
-      statusColor: "bg-amber-100 text-amber-800",
+      title: "Total Usuarios",
+      value: "1,248",
+      change: "+12% este mes",
+      icon: "group",
+      iconColor: "bg-primary-container text-on-primary-container",
     },
     {
-      initialcheck: "SP",
-      name: "Sofía Pérez",
-      date: "Oct 23, 2023",
-      subject: "Field Trip Attendance",
-      status: "Approved",
-      statusColor: "bg-emerald-100 text-emerald-800",
+      title: "Total Reportes",
+      value: "85",
+      change: "12 pendientes de revisión",
+      icon: "assignment_late",
+      iconColor: "bg-error-container text-on-error-container",
+    },
+    {
+      title: "Cursos Activos",
+      value: "18",
+      change: "4 nuevos este ciclo",
+      icon: "school",
+      iconColor: "bg-secondary-container text-on-secondary-container",
+    },
+    {
+      title: "Categorías Activas",
+      value: "6",
+      change: "Infraestructura, Conducta, etc.",
+      icon: "category",
+      iconColor: "bg-surface-container-highest text-on-surface-variant",
+    },
+  ];
+
+  const pendingReports = [
+    {
+      id: "REP-094",
+      student: "Lucas Benítez",
+      category: "Infraestructura",
+      date: "Hace 10 mins",
+      description: "Filtración de agua detectada en el laboratorio de química.",
+    },
+    {
+      id: "REP-093",
+      student: "Sofía Altamirano",
+      category: "Conducta",
+      date: "Hace 1 hora",
+      description: "Inasistencia reiterada y falta de entrega de asignaciones.",
+    },
+    {
+      id: "REP-092",
+      student: "Mateo Salazar",
+      category: "Académico",
+      date: "Ayer",
+      description:
+        "Problema técnico con el acceso a la plataforma de exámenes.",
     },
   ];
 
   return (
     <div>
-      <Header />
-      <div className="flex min-h-screen overflow-hidden">
-        {/* Navigation Drawer (Desktop) */}
-        <aside className="hidden md:flex flex-col h-screen w-72 bg-surface-container-low border-r border-outline-variant py-md z-40 shrink-0 mt-10">
-          <nav className="flex-1 space-y-1">
-            {navItems.map((item, index) => {
-              // Comprobamos si el enlace actual coincide con la URL del navegador
-              const isActive = location.pathname === item.path;
+      <div className="flex flex-col h-screen overflow-hidden bg-background text-on-background">
+        {/* Header Fijo */}
+        <Header />
 
-              return (
-                <Link
-                  key={index}
-                  to={item.path}
-                  className={
-                    isActive
-                      ? "bg-primary-container text-on-primary-container rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-md translate-x-1 transition-transform cursor-pointer"
-                      : "text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-md cursor-pointer"
-                  }
-                >
-                  <span className="material-symbols-outlined">{item.icon}</span>
-                  <span className="text-label-md font-label-md">
-                    {item.label}
-                  </span>
-                </Link>
-              );
-            })}
-          </nav>
-        </aside>
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col h-screen overflow-y-auto min-w-0 mt-16 px-4">
-          {/* Main Section */}
-          <main className="flex-1 p-container-margin-mobile md:p-container-margin-desktop space-y-lg max-w-7xl mx-auto w-full mb-24 md:mb-0">
-            {/* Welcome Section */}
-            <section className="flex flex-col md:flex-row md:items-end justify-between gap-md">
-              <div>
-                <p className="text-body-md font-body-md text-on-surface-variant">
-                  Welcome back, Admin
-                </p>
-                <h2 className="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-on-surface">
-                  Overview for today
-                </h2>
-              </div>
-              <div className="flex gap-sm">
-                <button className="flex items-center gap-xs px-4 py-2 rounded-lg bg-primary text-on-primary font-label-md hover:opacity-90 transition-all">
-                  <span className="material-symbols-outlined text-[18px]">
-                    add
-                  </span>
-                  New Report
-                </button>
-                <button className="flex items-center gap-xs px-4 py-2 rounded-lg bg-surface-container-high border border-outline-variant text-on-surface font-label-md hover:bg-surface-container-highest transition-all">
-                  <span className="material-symbols-outlined text-[18px]">
-                    download
-                  </span>
-                  Export
-                </button>
-              </div>
-            </section>
+        {/* Contenedor del Layout - pt-16 compensa exactamente el alto del Header (h-16) */}
+        <div className="flex flex-1 pt-16 overflow-hidden">
+          {/* Navigation Drawer (Desktop) - Alto dinámico exacto sin mt extra */}
+          <aside className="hidden md:flex flex-col h-[calc(100vh-64px)] w-72 bg-surface-container-low border-r border-outline-variant py-md z-30 shrink-0">
+            <nav className="flex-1 space-y-1">
+              {navItems.map((item, index) => {
+                const isActive = location.pathname === item.path;
 
-            {/* Key Metrics Grid */}
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-              {/* Metric 1 */}
-              <div className="glass-card p-lg rounded-xl flex items-start justify-between">
-                <div className="space-y-sm">
-                  <p className="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">
-                    Reportes Pendientes
-                  </p>
-                  <h3 className="text-headline-lg font-headline-lg text-on-surface">
-                    24
-                  </h3>
-                </div>
-                <div className="w-12 h-12 rounded-lg bg-error-container flex items-center justify-center text-on-error-container">
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ fontVariationSettings: "'FILL' 1" }}
+                return (
+                  <Link
+                    key={index}
+                    to={item.path}
+                    className={
+                      isActive
+                        ? "bg-primary-container text-on-primary-container rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-md translate-x-1 transition-transform cursor-pointer"
+                        : "text-on-surface-variant hover:bg-surface-container-highest transition-colors rounded-full mx-2 my-1 px-4 py-3 flex items-center gap-md cursor-pointer"
+                    }
                   >
-                    assignment_late
-                  </span>
-                </div>
-              </div>
-              {/* Metric 3 */}
-              <div className="glass-card p-lg rounded-xl flex items-start justify-between sm:col-span-2 lg:col-span-1">
-                <div className="space-y-sm">
-                  <p className="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">
-                    Horas Totales Registradas
-                  </p>
-                  <h3 className="text-headline-lg font-headline-lg text-on-surface">
-                    8,640
-                  </h3>
-                  <div className="flex items-center gap-xs text-on-surface-variant font-label-sm">
-                    <span className="material-symbols-outlined text-[16px]">
-                      schedule
+                    <span className="material-symbols-outlined">
+                      {item.icon}
                     </span>
-                    <span>Monthly total</span>
-                  </div>
+                    <span className="text-label-md font-label-md">
+                      {item.label}
+                    </span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </aside>
+
+          {/* Main Content Area - Scroll independiente */}
+          <div className="flex-1 flex flex-col h-[calc(100vh-64px)] overflow-y-auto min-w-0">
+            {/* Main Section */}
+            <main className="flex-1 px-margin-mobile py-stack-lg md:px-margin-desktop md:py-stack-lg space-y-lg max-w-7xl mx-auto w-full mb-24 md:mb-0">
+              {/* Welcome Section */}
+              <section className="flex flex-col md:flex-row md:items-end justify-between gap-md">
+                <div>
+                  <p className="text-body-md font-body-md text-on-surface-variant">
+                    Welcome back, Admin
+                  </p>
+                  <h2 className="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-on-surface">
+                    Overview for today
+                  </h2>
                 </div>
-                <div className="w-12 h-12 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ fontVariationSettings: "'FILL' 1" }}
+              </section>
+
+              {/* Tarjetas de Métricas */}
+              <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mt-4">
+                {statsCards.map((card, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-surface-container-lowest border border-outline-variant p-card rounded-2xl shadow-sm flex flex-col justify-between gap-stack-sm hover:shadow-md transition-shadow"
                   >
-                    history
-                  </span>
-                </div>
-              </div>
-            </section>
-
-            {/* Main Bento Layout */}
-            <section className="grid grid-cols-1 lg:grid-cols-3 gap-md">
-              {/* Chart Section */}
-              <div className="lg:col-span-2 glass-card rounded-xl p-lg space-y-lg">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-headline-sm font-headline-sm">
-                    Tendencia de Reportes
-                  </h3>
-                  <select className="text-label-sm font-label-sm bg-surface border-outline-variant rounded-lg focus:ring-primary">
-                    <option>Last 7 days</option>
-                    <option>Last 30 days</option>
-                  </select>
-                </div>
-                <div className="flex justify-between text-label-sm text-outline px-1">
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
-                    (day) => (
-                      <span key={day}>{day}</span>
-                    ),
-                  )}
-                </div>
-              </div>
-
-              {/* Quick Links / Recent Activity */}
-              {/*  <div className="space-y-md">
-                <div className="glass-card rounded-xl p-lg">
-                  <h3 className="text-label-md font-label-md text-on-surface-variant mb-md uppercase tracking-wider">
-                    Quick Actions
-                  </h3>
-                  <div className="space-y-sm">
-                    {[
-                      { text: "Revisar Reportes", icon: "rule" },
-                      { text: "Gestión de Usuarios", icon: "person_search" },
-                    ].map((action, i) => (
-                      <a
-                        key={i}
-                        className="flex items-center justify-between p-md rounded-lg hover:bg-primary-container hover:text-on-primary-container group transition-all border border-outline-variant"
-                        href="#"
+                    <div className="flex justify-between items-start">
+                      <span className="text-body-sm font-semibold text-on-surface-variant">
+                        {card.title}
+                      </span>
+                      <div
+                        className={`p-2 rounded-xl flex items-center justify-center ${card.iconColor}`}
                       >
-                        <div className="flex items-center gap-md">
-                          <span className="material-symbols-outlined text-primary group-hover:text-on-primary-container">
-                            {action.icon}
+                        <span className="material-symbols-outlined text-body-lg">
+                          {card.icon}
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-headline-md font-bold text-on-surface">
+                        {card.value}
+                      </h3>
+                      <p className="text-label-sm text-outline mt-1">
+                        {card.change}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </section>
+
+              {/* Reportes Pendientes */}
+              <section className="space-y-stack-md mt-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-headline-sm text-on-surface font-semibold">
+                    Reportes pendientes de revisión
+                  </h3>
+                  <Link
+                    to="/reports"
+                    className="text-label-md text-primary hover:underline flex items-center gap-1"
+                  >
+                    Ver todos
+                    <span className="material-symbols-outlined text-body-sm">
+                      arrow_forward
+                    </span>
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 gap-stack-sm mt-4">
+                  {pendingReports.map((report) => (
+                    <div
+                      key={report.id}
+                      className="bg-surface-container-lowest border border-outline-variant p-card rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-md hover:border-outline transition-colors"
+                    >
+                      {/* Report Info */}
+                      <div className="space-y-1 max-w-2xl">
+                        <div className="flex items-center gap-xs flex-wrap">
+                          <span className="text-label-sm font-bold text-outline">
+                            {report.id}
                           </span>
-                          <span className="text-body-sm font-label-md">
-                            {action.text}
+                          <span className="text-outline-variant">•</span>
+                          <span className="text-body-sm font-semibold text-on-surface">
+                            {report.student}
+                          </span>
+                          <span className="text-outline-variant">•</span>
+                          <span className="text-body-sm text-on-surface-variant">
+                            {report.category}
                           </span>
                         </div>
-                        <span className="material-symbols-outlined text-[20px]">
-                          chevron_right
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div> */}
-            </section>
+                        <p className="text-body-md text-on-surface line-clamp-1">
+                          {report.description}
+                        </p>
+                      </div>
 
-            {/* Submissions Table Section */}
-            <section className="glass-card rounded-xl overflow-hidden shadow-sm">
-              <div className="px-lg py-md border-b border-outline-variant bg-surface-container-low flex items-center justify-between">
-                <h3 className="text-headline-sm font-headline-sm">
-                  Submissions Log
-                </h3>
-                <button className="text-primary text-label-md hover:underline">
-                  View All
-                </button>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead className="bg-surface-container-low text-on-surface-variant text-label-sm uppercase tracking-wider">
-                    <tr>
-                      {["User", "Date", "Subject", "Status", "Action"].map(
-                        (th) => (
-                          <th key={th} className="px-lg py-4">
-                            {th}
-                          </th>
-                        ),
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-outline-variant">
-                    {submissions.map((sub, i) => (
-                      <tr
-                        key={i}
-                        className="hover:bg-surface-container-low transition-colors"
-                      >
-                        <td className="px-lg py-4">
-                          <div className="flex items-center gap-sm">
-                            <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs">
-                              {sub.initialcheck}
-                            </div>
-                            <span className="text-body-sm font-label-md">
-                              {sub.name}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-lg py-4 text-body-sm text-on-surface-variant">
-                          {sub.date}
-                        </td>
-                        <td className="px-lg py-4 text-body-sm font-label-md">
-                          {sub.subject}
-                        </td>
-                        <td className="px-lg py-4">
-                          <span
-                            className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase ${sub.statusColor}`}
-                          >
-                            {sub.status}
-                          </span>
-                        </td>
-                        <td className="px-lg py-4">
-                          <button className="text-primary material-symbols-outlined hover:bg-primary-container/10 p-1 rounded-full">
-                            visibility
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          </main>
-          {/* Bottom Navigation Bar (Mobile only) */}
-          <FooterMobile />
+                      {/* Report Status */}
+                      <div className="flex items-center justify-between sm:justify-end gap-md shrink-0">
+                        <span className="text-label-sm text-outline">
+                          {report.date}
+                        </span>
+                        <span className="bg-status-pending-bg text-status-pending-text px-sm py-1 rounded-full text-label-sm font-bold uppercase tracking-wider">
+                          PENDING
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </main>
+
+            {/* Bottom Navigation Bar (Mobile only) */}
+            <FooterMobile />
+          </div>
         </div>
       </div>
     </div>

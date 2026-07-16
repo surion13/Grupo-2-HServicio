@@ -17,7 +17,11 @@ function Header() {
       {/* --- TopAppBar --- */}
       <header className="bg-surface border-b border-outline-variant fixed top-0 w-full z-40 h-16 flex justify-between items-center px-margin-mobile md:px-margin-desktop">
         <div className="flex items-center gap-md">
-          <button className="material-symbols-outlined text-primary cursor-pointer">
+          {/* Se añade "md:hidden" para que el botón desaparezca en desktop */}
+          <button
+            className="material-symbols-outlined text-primary cursor-pointer md:hidden"
+            style={{ display: window.innerWidth >= 768 ? "none" : "block" }} // Solo si Tailwind v4 tiene problemas de compilación en tu entorno
+          >
             menu
           </button>
           <h1 className="text-headline-md font-bold text-primary">Funval</h1>
