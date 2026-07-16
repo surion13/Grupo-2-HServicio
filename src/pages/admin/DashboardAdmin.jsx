@@ -127,9 +127,6 @@ function DashboardAdmin() {
             {/* Welcome Section */}
             <section className="flex flex-col md:flex-row md:items-end justify-between gap-md">
               <div>
-                <p className="text-body-md font-body-md text-on-surface-variant">
-                  Welcome back, Admin
-                </p>
                 <h2 className="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-on-surface">
                   Overview for today
                 </h2>
