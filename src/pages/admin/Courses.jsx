@@ -1,103 +1,74 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { categoryService } from "../../services/funvalApi";
+import { courseService } from "../../services/funvalApi";
 import useApi from "../../hooks/useApi";
 import { useToast } from "../../hooks/useToast";
 import ConfirmModal from "../../components/common/ConfirmModal";
 import Spinner from "../../components/common/Spinners";
 
-
-
-function getCategoryIcon(name = "") {
-  const value = name.toLowerCase();
-  if (value.includes("educ") || value.includes("tutor") || value.includes("acad")) return "school";
-  if (value.includes("ambient") || value.includes("eco") || value.includes("recicl")) return "eco";
-  if (value.includes("social") || value.includes("comunit") || value.includes("asistenc")) return "volunteer_activism";
-  if (value.includes("deport")) return "sports_soccer";
-  if (value.includes("salud") || value.includes("medic")) return "medical_services";
-  if (value.includes("cultur") || value.includes("arte")) return "palette";
-  return "category";
-}
-
-export default function Categories() {
+export default function Courses() {
   const { showToast } = useToast();
 
-  // Criterio: Listado
   const {
-    data: categories,
+    data: courses,
     loading: loadingList,
-    execute: fetchCategories,
-  } = useApi(categoryService.list);
+    execute: fetchCourses,
+  } = useApi(courseService.list);
 
-  // Criterio: Crear, Update, Delete
-  const { loading: loadingCreate, execute: createCategory } = useApi(
-    categoryService.create,
-  );
-  const { loading: loadingUpdate, execute: updateCategory } = useApi(
-    categoryService.update,
-  );
-  const { loading: loadingDelete, execute: deleteCategory } = useApi(
-    categoryService.delete,
-  );
+  const { loading: loadingCreate, execute: createCourse } = useApi(courseService.create);
+  const { loading: loadingUpdate, execute: updateCourse } = useApi(courseService.update);
+  const { loading: loadingDelete, execute: deleteCourse } = useApi(courseService.delete);
 
-  const [formData, setFormData] = useState({ name: "", description: "" });
+  const [formData, setFormData] = useState({ name: "", duration: "", price: "" });
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState(null);
+  const [courseToDelete, setCourseToDelete] = useState(null);
 
-  // Criterio: Listado
   useEffect(() => {
-    fetchCategories();
+    fetchCourses();
   }, []);
 
   const resetForm = () => {
-    setFormData({ name: "", description: "" });
+    setFormData({ name: "", duration: "", price: "" });
     setEditingId(null);
     setShowForm(false);
   };
 
-  // Maneja tanto Crear como Editar
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editingId) {
-        await updateCategory(editingId, formData);
-        showToast("Categoría actualizada", "success");
+        await updateCourse(editingId, formData);
+        showToast("Curso actualizado", "success");
       } else {
-        await createCategory(formData);
-        showToast("Categoría creada", "success");
+        await createCourse(formData);
+        showToast("Curso creado", "success");
       }
       resetForm();
-      fetchCategories();
+      fetchCourses();
     } catch (err) {
-      showToast(
-        err.response?.data?.detail || "No se pudo guardar la categoría",
-        "error",
-      );
+      showToast(err.response?.data?.detail || "No se pudo guardar el curso", "error");
     }
   };
 
-  const handleEdit = (category) => {
-    setEditingId(category.id);
+  const handleEdit = (course) => {
+    setEditingId(course.id);
     setFormData({
-      name: category.name,
-      description: category.description || "",
+      name: course.name,
+      duration: course.duration,
+      price: course.price,
     });
     setShowForm(true);
   };
 
-  // Criterio: Eliminar
   const handleDeleteConfirm = async () => {
     try {
-      await deleteCategory(categoryToDelete.id);
-      showToast("Categoría eliminada", "success");
-      setCategoryToDelete(null);
-      fetchCategories();
+      await deleteCourse(courseToDelete.id);
+      showToast("Curso eliminado", "success");
+      setCourseToDelete(null);
+      fetchCourses();
     } catch (err) {
-      showToast(
-        err.response?.data?.detail || "No se pudo eliminar la categoría",
-        "error",
-      );
+      showToast(err.response?.data?.detail || "No se pudo eliminar el curso", "error");
     }
   };
 
@@ -113,22 +84,17 @@ export default function Categories() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-stack-sm mb-stack-lg">
         <div>
-          <h1 className="text-headline-lg text-on-surface">
-            Categorías de Servicio
-          </h1>
+          <h1 className="text-headline-lg text-on-surface">Cursos</h1>
           <p className="text-body-sm text-on-surface-variant">
-            Gestiona los tipos de actividades disponibles para los estudiantes.
+            Gestiona los cursos disponibles para los estudiantes.
           </p>
         </div>
         <button
-          onClick={() => {
-            resetForm();
-            setShowForm(true);
-          }}
+          onClick={() => { resetForm(); setShowForm(true); }}
           className="flex items-center justify-center gap-stack-sm px-stack-md py-stack-sm bg-primary text-on-primary rounded-lg text-label-md hover:bg-primary-container cursor-pointer"
         >
           <span className="material-symbols-outlined text-[18px]">add</span>
-          Crear Categoría
+          Crear Curso
         </button>
       </div>
 
@@ -141,16 +107,26 @@ export default function Categories() {
             type="text"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Nombre de la categoría"
+            placeholder="Nombre del curso"
             required
             className="p-stack-sm text-body-md bg-surface-low text-on-surface border border-outline rounded-lg outline-none focus:border-primary"
           />
-          <textarea
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            placeholder="Descripción"
+          <input
+            type="text"
+            value={formData.duration}
+            onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+            placeholder="Duración (ej: 8 semanas)"
+            required
+            className="p-stack-sm text-body-md bg-surface-low text-on-surface border border-outline rounded-lg outline-none focus:border-primary"
+          />
+          <input
+            type="number"
+            step="0.01"
+            min="0"
+            value={formData.price}
+            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            placeholder="Precio"
+            required
             className="p-stack-sm text-body-md bg-surface-low text-on-surface border border-outline rounded-lg outline-none focus:border-primary"
           />
           <div className="flex gap-stack-sm">
@@ -181,54 +157,40 @@ export default function Categories() {
               <thead className="bg-surface-container-low text-on-surface-variant text-label-sm uppercase">
                 <tr>
                   <th className="px-stack-md py-stack-sm">Nombre</th>
-                  <th className="px-stack-md py-stack-sm">Descripción</th>
+                  <th className="px-stack-md py-stack-sm">Duración</th>
+                  <th className="px-stack-md py-stack-sm">Precio</th>
                   <th className="px-stack-md py-stack-sm text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant">
-                {(categories || []).map((category) => (
-                  <tr
-                    key={category.id}
-                    className="hover:bg-surface-container-low"
-                  >
+                {(courses || []).map((course) => (
+                  <tr key={course.id} className="hover:bg-surface-container-low">
                     <td className="px-stack-md py-stack-sm text-body-sm font-semibold">
                       <div className="flex items-center gap-stack-sm">
-                        <span className="material-symbols-outlined text-primary">
-                          {getCategoryIcon(category.name)}
-                        </span>
-                        {category.name}
+                        <span className="material-symbols-outlined text-primary">school</span>
+                        {course.name}
                       </div>
                     </td>
                     <td className="px-stack-md py-stack-sm text-body-sm text-on-surface-variant">
-                      {category.description}
+                      {course.duration}
+                    </td>
+                    <td className="px-stack-md py-stack-sm text-body-sm text-on-surface-variant">
+                      {course.price}
                     </td>
                     <td className="px-stack-md py-stack-sm text-right whitespace-nowrap">
-                      <button
-                        onClick={() => handleEdit(category)}
-                        className="text-primary p-1 cursor-pointer"
-                      >
-                        <span className="material-symbols-outlined text-[20px]">
-                          edit
-                        </span>
+                      <button onClick={() => handleEdit(course)} className="text-primary p-1 cursor-pointer">
+                        <span className="material-symbols-outlined text-[20px]">edit</span>
                       </button>
-                      <button
-                        onClick={() => setCategoryToDelete(category)}
-                        className="text-error p-1 cursor-pointer"
-                      >
-                        <span className="material-symbols-outlined text-[20px]">
-                          delete
-                        </span>
+                      <button onClick={() => setCourseToDelete(course)} className="text-error p-1 cursor-pointer">
+                        <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
                   </tr>
                 ))}
-                {categories?.length === 0 && (
+                {courses?.length === 0 && (
                   <tr>
-                    <td
-                      colSpan={3}
-                      className="px-stack-md py-stack-lg text-center text-on-surface-variant text-body-sm"
-                    >
-                      No hay categorías registradas todavía
+                    <td colSpan={4} className="px-stack-md py-stack-lg text-center text-on-surface-variant text-body-sm">
+                      No hay cursos registrados todavía
                     </td>
                   </tr>
                 )}
@@ -239,11 +201,11 @@ export default function Categories() {
       )}
 
       <ConfirmModal
-        isOpen={!!categoryToDelete}
-        title="¿Eliminar categoría?"
-        message={`Esta acción eliminará "${categoryToDelete?.name}". No se puede deshacer.`}
+        isOpen={!!courseToDelete}
+        title="¿Eliminar curso?"
+        message={`Esta acción eliminará "${courseToDelete?.name}". No se puede deshacer.`}
         onConfirm={handleDeleteConfirm}
-        onCancel={() => setCategoryToDelete(null)}
+        onCancel={() => setCourseToDelete(null)}
         isLoading={loadingDelete}
       />
     </div>
