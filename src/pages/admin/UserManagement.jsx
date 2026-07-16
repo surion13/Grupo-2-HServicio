@@ -4,16 +4,19 @@ import useApi from "../../hooks/useApi";
 import { userService } from "../../services/funvalApi";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Spinner from "../../components/common/Spinners";
 
 export default function UserManagment() {
   const { loading, error, execute: cargandoLista } = useApi(userService.list);
   const [datos, setDatos] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     async function traerDatos() {
       try {
         const usuarios = await cargandoLista();
         setDatos(usuarios.items);
+        setUsers(usuarios.total);
       } catch (error) {
         console.error(error);
       }
@@ -116,7 +119,7 @@ export default function UserManagment() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-md mb-lg">
               <div className="hidden md:block">
                 <p className="text-body-md font-body-md text-on-surface-variant">
-                  Total: 124 usuarios activos
+                  Total: {users} usuarios activos
                 </p>
               </div>
               <button className="w-full sm:w-auto bg-primary text-on-primary font-label-md text-label-md p-2 rounded-lg flex items-center justify-center gap-sm shadow-md hover:opacity-90 active:scale-95 transition-all">
@@ -126,7 +129,6 @@ export default function UserManagment() {
                 Crear Nuevo Usuario
               </button>
             </div>
-
             {/* Bento Grid - Data Table */}
             <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden mt-4">
               <div className="overflow-x-auto">
@@ -148,61 +150,69 @@ export default function UserManagment() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant">
-                    {datos.map((dato, index) => (
-                      <tr
-                        key={index}
-                        className="hover:bg-surface-container-low transition-colors group"
-                      >
-                        <td className="p-2">
-                          <div className="flex items-center gap-md">
-                            <div>
-                              <p className="text-body-md font-semibold text-on-surface">
-                                {dato.first_name} {dato.last_name}
-                              </p>
-                              <p className="text-body-sm text-on-surface-variant md:hidden">
-                                {dato.email}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-lg py-md hidden md:table-cell">
-                          <span className="text-body-md text-on-surface-variant">
-                            {dato.email}
-                          </span>
-                        </td>
-                        <td className="px-lg py-md">
-                          <span className="soft-fill-emerald px-sm py-xs rounded-full text-label-sm font-label-sm font-bold uppercase tracking-wider">
-                            {dato.role}
-                          </span>
-                        </td>
-                        <td className="px-lg py-md text-right">
-                          <div className="flex justify-end gap-sm">
-                            <button
-                              className="p-sm text-primary hover:bg-primary-fixed-dim rounded-full transition-colors"
-                              title="Editar"
-                            >
-                              <span
-                                className="material-symbols-outlined"
-                                data-icon="edit"
-                              >
-                                edit
-                              </span>
-                            </button>
-                            <button
-                              className="p-sm text-error hover:bg-error-container rounded-full transition-colors"
-                              title="Eliminar"
-                            >
-                              <span
-                                className="material-symbols-outlined"
-                                data-icon="delete"
-                              >
-                                delete
-                              </span>
-                            </button>
-                          </div>
+                    {loading ? (
+                      <tr>
+                        <td colSpan={4} className="py-10 text-center">
+                          <Spinner />
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      datos.map((dato, index) => (
+                        <tr
+                          key={index}
+                          className="hover:bg-surface-container-low transition-colors group"
+                        >
+                          <td className="p-2">
+                            <div className="flex items-center gap-md">
+                              <div>
+                                <p className="text-body-md font-semibold text-on-surface">
+                                  {dato.first_name} {dato.last_name}
+                                </p>
+                                <p className="text-body-sm text-on-surface-variant md:hidden">
+                                  {dato.email}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-lg py-md hidden md:table-cell">
+                            <span className="text-body-md text-on-surface-variant">
+                              {dato.email}
+                            </span>
+                          </td>
+                          <td className="px-lg py-md">
+                            <span className="soft-fill-emerald px-sm py-xs rounded-full text-label-sm font-label-sm font-bold uppercase tracking-wider">
+                              {dato.role}
+                            </span>
+                          </td>
+                          <td className="px-lg py-md text-right">
+                            <div className="flex justify-end gap-sm">
+                              <button
+                                className="p-sm text-primary hover:bg-primary-fixed-dim rounded-full transition-colors"
+                                title="Editar"
+                              >
+                                <span
+                                  className="material-symbols-outlined"
+                                  data-icon="edit"
+                                >
+                                  edit
+                                </span>
+                              </button>
+                              <button
+                                className="p-sm text-error hover:bg-error-container rounded-full transition-colors"
+                                title="Eliminar"
+                              >
+                                <span
+                                  className="material-symbols-outlined"
+                                  data-icon="delete"
+                                >
+                                  delete
+                                </span>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>

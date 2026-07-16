@@ -55,7 +55,7 @@ function DashboardAdmin() {
     {
       title: "Estudiantes",
       value: datos.total_students,
-      change: "",
+      change: "0 estudiantes nuevos",
       icon: "group",
       iconColor: "bg-primary-container text-on-primary-container",
     },
@@ -69,7 +69,7 @@ function DashboardAdmin() {
     {
       title: "Cursos Activos",
       value: courses.length,
-      change: "",
+      change: "3 cursos nuevos en proceso",
       icon: "school",
       iconColor: "bg-secondary-container text-on-secondary-container",
     },
