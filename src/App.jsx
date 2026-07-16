@@ -8,7 +8,7 @@ import DashboardStudent from "./pages/student/DashboardStudent";
 import UserManagment from "./pages/admin/UserManagement";
 
 import Categories from "./pages/admin/Categories"; //aqui se importa
-
+import Courses from "./pages/admin/Courses"; //aqui se importa
 function App() {
   return (
     <>
@@ -20,8 +20,9 @@ function App() {
             <Route path="/dashboard-admin" element={<DashboardAdmin />} />
             <Route path="/user-managment" element={<UserManagment />} />
             <Route path="/dashboard-admin" element={<DashboardAdmin />} />
-            //aqui se agrega la ruta componente Categorias
-            <Route path="/admin/categorias" element={<Categories />} />
+            //aqui se agrega la ruta componente Categories y Courses
+            <Route path="/admin/categories" element={<Categories />} />
+            <Route path="/admin/courses" element={<Courses />} />
           </Route>
 
           <Route element={<RoleRoute roleUser="STUDENT" />}>
