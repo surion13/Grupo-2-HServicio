@@ -13,7 +13,6 @@ export default function UserManagment() {
     async function traerDatos() {
       try {
         const usuarios = await cargandoLista();
-        console.log(usuarios);
         setDatos(usuarios.items);
       } catch (error) {
         console.error(error);

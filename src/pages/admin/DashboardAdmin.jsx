@@ -3,9 +3,39 @@ import { AuthContext } from "../../context/AuthContext";
 import FooterMobile from "../../components/common/FooterMobile";
 import Header from "../../components/common/Header";
 import { useLocation, Link } from "react-router-dom";
+import useApi from "../../hooks/useApi";
+import { dashboardService } from "../../services/funvalApi";
+import { useState } from "react";
+import { useEffect } from "react";
 
 function DashboardAdmin() {
   const { logout } = useContext(AuthContext);
+
+  const {
+    loading,
+    error,
+    execute: dashboard,
+  } = useApi(dashboardService.getStats);
+
+  const [datos, setDatos] = useState([]);
+  const [reports, setReports] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [category, setCategory] = useState([]);
+
+  useEffect(() => {
+    async function traerDatos() {
+      try {
+        const response = await dashboard();
+        setDatos(response.users);
+        setReports(response.reports);
+        setCourses(response.top_courses);
+        setCategory(response.top_categories);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    traerDatos();
+  }, []);
 
   const navItems = [
     { label: "Dashboard", icon: "dashboard", path: "/dashboard-admin" },
@@ -23,30 +53,30 @@ function DashboardAdmin() {
 
   const statsCards = [
     {
-      title: "Total Usuarios",
-      value: "1,248",
-      change: "+12% este mes",
+      title: "Estudiantes",
+      value: datos.total_students,
+      change: "",
       icon: "group",
       iconColor: "bg-primary-container text-on-primary-container",
     },
     {
       title: "Total Reportes",
-      value: "85",
-      change: "12 pendientes de revisión",
+      value: reports.total,
+      change: `${reports.pending} reportes pendientes`,
       icon: "assignment_late",
       iconColor: "bg-error-container text-on-error-container",
     },
     {
       title: "Cursos Activos",
-      value: "18",
-      change: "4 nuevos este ciclo",
+      value: courses.length,
+      change: "",
       icon: "school",
       iconColor: "bg-secondary-container text-on-secondary-container",
     },
     {
       title: "Categorías Activas",
-      value: "6",
-      change: "Infraestructura, Conducta, etc.",
+      value: category.length,
+      change: `${category[0]?.name}, ${category[1]?.name}, etc..`,
       icon: "category",
       iconColor: "bg-surface-container-highest text-on-surface-variant",
     },
@@ -81,7 +111,6 @@ function DashboardAdmin() {
     <div className="flex flex-col h-screen overflow-hidden bg-background text-on-background">
       {/* Header Fijo */}
       <Header />
-
       {/* Contenedor del Layout - pt-16 compensa exactamente el alto del Header (h-16) */}
       <div className="flex flex-1 pt-16 overflow-hidden">
         {/* Navigation Drawer (Desktop) - Alto dinámico exacto sin mt extra */}
