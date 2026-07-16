@@ -27,6 +27,11 @@ function AuthProvider({ children }) {
 
       setUser(authme.email);
       setRole(authme.role);
+        } catch (error) {
+            console.error("error al loguear: ", error)
+            throw error;//Rafa: para que al fallar las notificaciones Toast usen el error.
+        }
+    }
 
       setAuth(authme);
 
