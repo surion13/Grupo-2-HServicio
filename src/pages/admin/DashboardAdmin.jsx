@@ -1,12 +1,8 @@
-import { useContext } from "react"
-
-import {Link} from "react-router-dom"
-
-import { AuthContext } from "../../context/AuthContext"
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import FooterMobile from "../../components/common/FooterMobile";
 import Header from "../../components/common/Header";
 import { useLocation, Link } from "react-router-dom";
-
 
 function DashboardAdmin() {
   const { logout } = useContext(AuthContext);
