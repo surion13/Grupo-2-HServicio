@@ -87,31 +87,6 @@ function DashboardAdmin() {
     },
   ];
 
-  /*   const pendingReports = [
-    {
-      id: "REP-094",
-      student: "Lucas Benítez",
-      category: "Infraestructura",
-      date: "Hace 10 mins",
-      description: "Filtración de agua detectada en el laboratorio de química.",
-    },
-    {
-      id: "REP-093",
-      student: "Sofía Altamirano",
-      category: "Conducta",
-      date: "Hace 1 hora",
-      description: "Inasistencia reiterada y falta de entrega de asignaciones.",
-    },
-    {
-      id: "REP-092",
-      student: "Mateo Salazar",
-      category: "Académico",
-      date: "Ayer",
-      description:
-        "Problema técnico con el acceso a la plataforma de exámenes.",
-    },
-  ]; */
-
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-background text-on-background">
       {/* Header Fijo */}
