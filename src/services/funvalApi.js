@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = ''
+const BASE_URL = 'https://'
 
 const prefijoApi='/api/v1'
 

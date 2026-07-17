@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 // Rafa: Importación limpia del hook independiente de notificaciones Toast
 import { useToast } from "../../hooks/useToast";
+import Spinner from "../../components/common/Spinners";
 
 export default function Login() {
     const navigate = useNavigate()
@@ -114,7 +115,7 @@ export default function Login() {
 
                         {/* <!-- Submit Button --> */}
                         <button className="cursor-pointer w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
-                            {loading ? <span className="text-base">Espere estamos cargando</span>
+                            {loading ? <Spinner />
                             :   <>
                                     <span>Entrar</span>
                                     <span className="material-symbols-outlined text-[18px]">login</span>
