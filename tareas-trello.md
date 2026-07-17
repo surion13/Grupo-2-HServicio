@@ -11,7 +11,7 @@ exactamente qué esperar y qué pueden ir adelantando mientras tanto.
 
 ## FASE 1 — Cimientos (arrancan todos en paralelo, nadie espera a nadie)
 
-- [ ] **[Líder] Setup del repositorio**
+<!-- - [ ] **[Líder] Setup del repositorio**
   - Crear repo, rama `main` (protegida) y `develop`, convención `feature/nombre-card` por card
   - README con instrucciones de instalación y `.env` (`VITE_API_URL`)
 
@@ -25,7 +25,7 @@ exactamente qué esperar y qué pueden ir adelantando mientras tanto.
   - `GET /api/v1/profile/me` para hidratar sesión al refrescar
 
 - [ ] **[Dev A] Página de Login** 🟢
-  - `POST /api/v1/auth/login`, manejo de error de credenciales
+  - `POST /api/v1/auth/login`, manejo de error de credenciales -->
 
 - [ ] **[Dev A] Logout** 🟢
   - `POST /api/v1/auth/logout`, limpia Context y cookie
