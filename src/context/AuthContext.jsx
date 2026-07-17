@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
         setLoading(true)
         
         try {
-            const response = await api.get("/api/v1/profile/me")
+            const response = await api.get("/v1/profile/me")
             
             setUser(response.data)
 

@@ -4,7 +4,7 @@ const authService = {}
 
 authService.login = async (email, password) => {
     try {
-        await api.post("/api/v1/auth/login", { email, password })
+        await api.post("/v1/auth/login", { email, password })
         return { success: true }
 
     } catch (error) {
@@ -14,7 +14,7 @@ authService.login = async (email, password) => {
 }
 
 authService.logout = async () => {
-    const response = await api.post("/api/v1/auth/logout")
+    const response = await api.post("/v1/auth/logout")
     return response.data // Limpia la cookie HTTPOnly en el navegador
 }
 
