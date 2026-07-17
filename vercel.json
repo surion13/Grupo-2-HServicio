@@ -4,5 +4,14 @@
       "source": "/api/:path*",
       "destination": "https://www.hs-api.devfunval.cloud/api/:path*"
     }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "https://grupo2-indol.vercel.app" }
+      ]
+    }
   ]
 }
