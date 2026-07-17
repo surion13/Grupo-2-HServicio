@@ -28,16 +28,7 @@ const funvalServices = axios.create({
 })
 
 // 2. Módulo de Autenticación (Auth)
-export const authService = {
-    login: async (email, password) => {
-        const response = await funvalServices.post(`${ENDPOINTS.AUTH}/login`, { email, password })
-        return response.data // Retorna { access_token, token_type }
-    },
-    logout: async () => {
-        const response = await funvalServices.post(`${ENDPOINTS.AUTH}/logout`)
-        return response.data // Limpia la cookie HTTPOnly en el navegador
-    }
-}
+
 
 // 3. Módulo de Perfil (Profile)
 export const profileService = {

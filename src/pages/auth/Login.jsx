@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -7,24 +7,28 @@ import { AuthContext } from "../../context/AuthContext";
 import { useToast } from "../../hooks/useToast";
 
 export default function Login() {
-    // Rafa: Consumo del hook global de notificaciones
-    const { showToast } = useToast();
-
+    const navigate = useNavigate()
+    const { error, loading, login } = useContext(AuthContext)
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    // Rafa: Consumo del hook global de notificaciones
+    const { showToast } = useToast();
+
     // Rafa: Estado controlado para alternar la visibilidad de la contraseña de forma reactiva
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-    const { loading, error, login } = useContext(AuthContext);
     
     //Agregando logica try catch para que las Toast notifications funcionen dinamicamente
     async function handleSubmit(e) {
         e.preventDefault()
+
         try {
             await login(email, password)
             // Si el login es exitoso, disparamos un Toast de éxito (verde)
             showToast("¡Inicio de sesión exitoso! Bienvenido.", "success");
+
+            navigate("/redirect")
         } catch (error) {
             // Extraemos el mensaje real que viene desde funvalApi ("Invalid email or password")
             const apiMessage = error.response?.data?.detail || "Credenciales incorrectas";
@@ -32,17 +36,14 @@ export default function Login() {
             // CRÍTICO: Pasamos explícitamente el tipo "error" para que se pinte de color rojo
             showToast(apiMessage, "error");
         }
-        
-        
     }
+
     // Rafa: Función para autocompletar credenciales de prueba
     const selectTestCredentials = (testEmail, testPassword) => {
         setEmail(testEmail);
         setPassword(testPassword);
         showToast("Credenciales de prueba cargadas", "success");
     };
-
-    //const showPassword = () => document.querySelector("#password").textContent = password 
 
     //Rafa: modificando visbilidad de password para que se actualice:
     const togglePasswordVisibility = () => {
@@ -112,7 +113,7 @@ export default function Login() {
                         </div>
 
                         {/* <!-- Submit Button --> */}
-                        <button className="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+                        <button className="cursor-pointer w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
                             {loading ? <span className="text-base">Espere estamos cargando</span>
                             :   <>
                                     <span>Entrar</span>

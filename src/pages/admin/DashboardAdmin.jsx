@@ -10,7 +10,6 @@ import { useEffect } from "react";
 import BadgeState from "../../components/common/BadgeState";
 
 function DashboardAdmin() {
-  const { logout } = useContext(AuthContext);
 
   const {
     loading,
