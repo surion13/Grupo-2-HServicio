@@ -41,7 +41,7 @@ export default function PdfUploader({ entityId, onUploadSuccess }) {
         : error;
       showToast(displayError, "error");
     }
-  }, [error,showToast]);
+  }, [error]);
 
   // Validador y selector de archivos PDF (Cumple Criterios 1 y 5 con useToast)
   const handleFileChange = (selectedFile) => {
@@ -165,7 +165,7 @@ export default function PdfUploader({ entityId, onUploadSuccess }) {
                 placeholder="Ej: Apoyo en Biblioteca Central organizando el inventario de libros."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-black min-h-20"
+                className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-black min-h-[80px]"
                 required
               />
             </div>
@@ -222,7 +222,7 @@ export default function PdfUploader({ entityId, onUploadSuccess }) {
           {file ? (
             <div className="flex flex-col items-center justify-center gap-2">
               {/* Muestra el nombre del archivo seleccionado (Criterio 2) */}
-              <p className="text-sm font-medium text-brand-600 truncate max-w-62" title={file.name}>
+              <p className="text-sm font-medium text-brand-600 truncate max-w-[250px]" title={file.name}>
                 {file.name}
               </p>
               {/* Botón para eliminar/quitar el archivo seleccionado (Criterio 2) */}
