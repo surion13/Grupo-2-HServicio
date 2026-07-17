@@ -1,10 +1,7 @@
-import { useContext } from "react"
-import { AuthContext } from "../../context/AuthContext"
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth"; //Rafa: llamando al hook para log out
 
 function Header() {
-  const { logout } = useContext(AuthContext)
   const [darkMode, setDarkMode] = useState(false);
 
   //Rafa: extraemos el usuario y la funcion logout
@@ -52,10 +49,6 @@ function Header() {
             />
             {/* Rafa: Boton de salida con Google Material symbols */}
           </div>
-<<<<<<< HEAD
-
-          <button onClick={logout} className="cursor-pointer text-primary hover:underline">Cerrar Sesión</button>
-=======
           <button
             onClick={logout}
             className="material-symbols-outlined text-error hover:bg-error-container hover:text-on-error-container cursor-pointer p-xs rounded-full transition-colors"
@@ -63,7 +56,6 @@ function Header() {
           >
             logout
           </button>
->>>>>>> ced03ea23faeaaa9e9306c4a049556809a0423e7
         </div>
       </header>
     </div>
