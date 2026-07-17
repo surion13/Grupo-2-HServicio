@@ -3,25 +3,52 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
+// Rafa: Importación limpia del hook independiente de notificaciones Toast
+import { useToast } from "../../hooks/useToast";
+
 export default function Login() {
     const navigate = useNavigate()
     const { error, loading, login } = useContext(AuthContext)
     
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    // Rafa: Consumo del hook global de notificaciones
+    const { showToast } = useToast();
+
+    // Rafa: Estado controlado para alternar la visibilidad de la contraseña de forma reactiva
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     
+    //Agregando logica try catch para que las Toast notifications funcionen dinamicamente
     async function handleSubmit(e) {
         e.preventDefault()
-        
-        try {
-            await login(email, password);
-        
-            navigate("/redirect")
 
+        try {
+            await login(email, password)
+            // Si el login es exitoso, disparamos un Toast de éxito (verde)
+            showToast("¡Inicio de sesión exitoso! Bienvenido.", "success");
+
+            navigate("/redirect")
         } catch (error) {
-            console.error(error)
+            // Extraemos el mensaje real que viene desde funvalApi ("Invalid email or password")
+            const apiMessage = error.response?.data?.detail || "Credenciales incorrectas";
+            
+            // CRÍTICO: Pasamos explícitamente el tipo "error" para que se pinte de color rojo
+            showToast(apiMessage, "error");
         }
     }
+
+    // Rafa: Función para autocompletar credenciales de prueba
+    const selectTestCredentials = (testEmail, testPassword) => {
+        setEmail(testEmail);
+        setPassword(testPassword);
+        showToast("Credenciales de prueba cargadas", "success");
+    };
+
+    //Rafa: modificando visbilidad de password para que se actualice:
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible((prev) => !prev);
+    };
 
     return (
         <article className="font-sans min-h-screen flex flex-col bg-background text-on-background">
@@ -54,7 +81,7 @@ export default function Login() {
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-outline">
                                     <span className="material-symbols-outlined text-[20px]">mail</span>
                                 </div>
-                                <input onChange={e => setEmail(e.target.value)} className="block w-full pl-10 pr-3 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="email" name="email" placeholder="nombre@empresa.com" required="" type="email"/>
+                                <input value={email} onChange={e => setEmail(e.target.value)} className="block w-full pl-10 pr-3 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="email" name="email" placeholder="nombre@empresa.com" required="" type="email"/>
                             </div>
                         </div>
 
@@ -68,10 +95,10 @@ export default function Login() {
                                     <span className="material-symbols-outlined text-[20px]">lock</span>
                                 </div>
 
-                                <input onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type="password"/>
-                                
-                                <button className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button">
-                                    <span className="material-symbols-outlined text-[20px]" id="password-toggle-icon">visibility</span>
+                                <input value={password} onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type={isPasswordVisible ? "text" : "password"}/>{/* Cambiando el tipo de boton de password a button para que funcione la opcion de ocultar/mostrar el pw */}
+                                {/* usando la funcion toggle */}
+                                <button onClick={togglePasswordVisibility} className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button">
+                                    <span className="material-symbols-outlined text-[20px]" id="password-toggle-icon">{isPasswordVisible ? "visibility_off" :"visibility"}</span>
                                 </button>
                             </div>
                         </div>
@@ -94,6 +121,30 @@ export default function Login() {
                                 </>
                             }
                         </button>
+
+                        {/* SECCIÓN DE CREDENCIALES DE PRUEBA */}
+                        <div className="mt-4 p-4 bg-surface-container-low rounded-lg border border-outline-variant space-y-2">
+                            <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider flex items-center gap-1.5">
+                                <span className="material-symbols-outlined text-[16px] text-primary">build</span>
+                                Acceso de prueba rápido
+                            </p>
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => selectTestCredentials("admin@funval.com", "1234567890")}
+                                    className="flex-1 py-1.5 px-3 text-xs font-medium bg-primary-container text-on-primary-container rounded-md hover:opacity-90 transition-opacity cursor-pointer border border-primary/20"
+                                >
+                                    🔑 Mod: Admin
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => selectTestCredentials("jordan.travieso@funval.com", "PasswordSecure123!")}
+                                    className="flex-1 py-1.5 px-3 text-xs font-medium bg-secondary-container text-on-secondary-container rounded-md hover:opacity-90 transition-opacity cursor-pointer border border-secondary/20"
+                                >
+                                    🎓 Mod: Estudiante
+                                </button>
+                            </div>
+                        </div>
 
                         {/* <!-- Create Account Link --> */}
                         <div className="text-center mt-stack-lg pt-stack-md border-t border-surface-variant">

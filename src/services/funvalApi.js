@@ -142,17 +142,33 @@ export const courseService = {
 
 // 8. Módulo de Reportes (Reports)
 export const reportService = {
-    submit: async (reportData) => {
-        const response = await funvalServices.post(`${ENDPOINTS.REPORTS}/`, reportData)
+    submit: async (formData) => {
+        const response = await funvalServices.post(`${ENDPOINTS.REPORTS}/`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data' 
+            }
+        })
         return response.data
     },
     list: async () => {
         const response = await funvalServices.get(`${ENDPOINTS.REPORTS}/`)
         return response.data
     },
-    update: async (reportId, reportData) => {
-        const response = await funvalServices.patch(`${ENDPOINTS.REPORTS}/${reportId}`, reportData)
+    update: async (reportId, formData) => {
+        const response = await funvalServices.patch(`${ENDPOINTS.REPORTS}/${reportId}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
         return response.data
+    },
+    uploadPdf: async (formData) => {
+        const response = await funvalServices.post(`${ENDPOINTS.REPORTS}/upload`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data' // Requerido para transferir archivos binary/multipart
+            }
+        });
+        return response.data;
     },
     getEvidenceLink: async (reportId) => {
         const response = await funvalServices.get(`${ENDPOINTS.REPORTS}/${reportId}/evidence`)

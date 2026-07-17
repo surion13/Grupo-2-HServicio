@@ -1,10 +1,14 @@
 import { useContext } from "react"
 import { AuthContext } from "../../context/AuthContext"
 import { useState, useEffect } from "react";
+import { useAuth } from "../../hooks/useAuth"; //Rafa: llamando al hook para log out
 
 function Header() {
   const { logout } = useContext(AuthContext)
   const [darkMode, setDarkMode] = useState(false);
+
+  //Rafa: extraemos el usuario y la funcion logout
+  const { nombre, logout } = useAuth();
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -19,11 +23,9 @@ function Header() {
     <div>
       {/* --- TopAppBar --- */}
       <header className="bg-surface border-b border-outline-variant fixed top-0 w-full z-40 h-16 flex justify-between items-center px-margin-mobile md:px-margin-desktop">
-        <div className="flex items-center gap-md">
-          <button className="material-symbols-outlined text-primary cursor-pointer">
-            menu
-          </button>
+        <div className="flex items-center gap-4">
           <h1 className="text-headline-md font-bold text-primary">Funval</h1>
+          <p className="md:hidden">{nombre}</p>
         </div>
 
         <div className="flex items-center gap-4">
@@ -35,6 +37,12 @@ function Header() {
           >
             {darkMode ? "light_mode" : "dark_mode"}
           </button>
+          {/* Rafa: Usamos 'user' para mostrar el correo/nombre y solucionar el warning */}
+          {nombre && (
+            <span className="text-body-medium font-medium text-on-surface hidden sm:inline">
+              {nombre}
+            </span>
+          )}
 
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
             <img
@@ -42,9 +50,20 @@ function Header() {
               alt="Alejandro's profile portrait"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCMWPecmMLNvge6tCUWWlnibQESmiANPvAZlKtvkqvU9eZW0kHOeQR9Q_VmPBAAlFfs9K262QX7YrE50dWlrH24CB-VSaCBs-X0HZr5lOKU4F1JpI5TrnYdbN7i2WeTp7Vj690zJqnxkK56Mym8vzdYlLzj1tv5pjw8is7lq45Hg2xdE6noXF7fRRjcAUe8rmZ06qFShFzwLAubMClIpYzIdCwW19LBiQdLH4UWSQGIqveHUNqOkXekmaMWKATIly0xJBiaOQe3ys"
             />
+            {/* Rafa: Boton de salida con Google Material symbols */}
           </div>
+<<<<<<< HEAD
 
           <button onClick={logout} className="cursor-pointer text-primary hover:underline">Cerrar Sesión</button>
+=======
+          <button
+            onClick={logout}
+            className="material-symbols-outlined text-error hover:bg-error-container hover:text-on-error-container cursor-pointer p-xs rounded-full transition-colors"
+            title="Cerrar Sesión"
+          >
+            logout
+          </button>
+>>>>>>> ced03ea23faeaaa9e9306c4a049556809a0423e7
         </div>
       </header>
     </div>

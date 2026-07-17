@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export default function useApi(asyncFunction) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Una función asíncrona normal
-  async function execute(...args) {
+  // Envolvemos con useCallback para mantener la referencia estable
+  const execute = useCallback(async (...args) => {
     try {
       setLoading(true);
       setError(null);
@@ -23,7 +23,7 @@ export default function useApi(asyncFunction) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [asyncFunction]); // Depende únicamente de la función de servicio que le pasamos
 
   return { data, loading, error, execute };
 }

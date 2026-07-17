@@ -47,7 +47,7 @@ function AuthProvider({ children }) {
         } finally {
             setLoading(false)
         }
-    }
+    } 
 
     const logout = async () => {    
         await authService.logout()
@@ -55,19 +55,19 @@ function AuthProvider({ children }) {
     }
 
     useEffect(() => {
-        
-        checkAuth();
-        
+        (async()=>{
+          checkAuth();
+        })()
     }, []);
 
     
     const value = { user, loading, error, login, logout, isAuthenticated: Boolean(user)}
 
-    return (
-        <AuthContext.Provider value={value}>
-            { children }
-        </AuthContext.Provider>
-    )
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
-export { AuthContext, AuthProvider }
+export { AuthContext, AuthProvider };
