@@ -1,7 +1,7 @@
 import { useState, createContext } from "react";
 import { useEffect } from "react";
 import { authService } from "../services/authService";
-import { api } from "../services/api";
+import { funvalServices } from "../services/api";
 
 const AuthContext = createContext();
 
@@ -16,7 +16,7 @@ function AuthProvider({ children }) {
         setLoading(true)
         
         try {
-            const response = await api.get("/v1/profile/me")
+            const response = await funvalServices.get("/v1/profile/me")
             
             setUser(response.data)
 

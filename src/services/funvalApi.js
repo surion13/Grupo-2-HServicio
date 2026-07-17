@@ -1,6 +1,4 @@
-import axios from 'axios'
-
-const BASE_URL = import.meta.env.VITE_API_URL
+import { funvalServices } from "./api";
 
 const prefijoApi='/v1'
 
@@ -17,18 +15,6 @@ const ENDPOINTS = {
     ENUMS:`${prefijoApi}/enums`,
     HEALTH:`${prefijoApi}/health`
 }
-
-// 1. Configuración de la instancia base de Axios
-const funvalServices = axios.create({
-    baseURL: BASE_URL,
-    withCredentials: true, // 👈 CRUCIAL: Envía y recibe la cookie HTTPOnly, Requisito tecnico 1
-    headers: {
-        'Content-Type': 'application/json'
-    }
-})
-
-// 2. Módulo de Autenticación (Auth)
-
 
 // 3. Módulo de Perfil (Profile)
 export const profileService = {
