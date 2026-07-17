@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ToastContext } from "./ToastContext";
 //
-export function ToastProvider({ children }) {
+function ToastProvider({ children }) {
     const [toasts, setToasts] = useState([]);
 
     function showToast(message, type = "success") {
@@ -77,3 +77,5 @@ export function ToastProvider({ children }) {
         </ToastContext.Provider>
     );
 }
+
+export {ToastProvider}
