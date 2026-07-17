@@ -44,6 +44,10 @@ function DashboardAdmin() {
   }, []);
 
   const navItems = [
+
+    { label: "Categories", icon: "category", path: "/admin/categories" },
+    { label: "Courses", icon: "school", path: "/admin/courses" },
+
     { label: "Dashboard", icon: "dashboard", path: "/dashboard-admin" },
     { label: "Student Records", icon: "group", path: "/students" },
     { label: "Reports Queue", icon: "assignment_late", path: "/reports" },
