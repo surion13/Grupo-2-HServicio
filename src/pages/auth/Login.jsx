@@ -137,7 +137,7 @@ export default function Login() {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => selectTestCredentials("student@funval.com", "12345678")}
+                                    onClick={() => selectTestCredentials("jordan.travieso@funval.com", "PasswordSecure123!")}
                                     className="flex-1 py-1.5 px-3 text-xs font-medium bg-secondary-container text-on-secondary-container rounded-md hover:opacity-90 transition-opacity cursor-pointer border border-secondary/20"
                                 >
                                     🎓 Mod: Estudiante
