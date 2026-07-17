@@ -1,17 +1,17 @@
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import FooterMobile from "../../components/common/FooterMobile";
-import Header from "../../components/common/Header";
+import { useContext, useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import useApi from "../../hooks/useApi";
 import { dashboardService, reportService } from "../../services/funvalApi";
-import { useState } from "react";
-import { useEffect } from "react";
+
+import FooterMobile from "../../components/common/FooterMobile";
+import Header from "../../components/common/Header";
 import BadgeState from "../../components/common/BadgeState";
 
 function DashboardAdmin() {
   const { logout } = useContext(AuthContext);
 
+  // Instancias de consumo de API
   const {
     loading,
     error,
@@ -20,34 +20,38 @@ function DashboardAdmin() {
 
   const { execute: reportes } = useApi(reportService.list);
 
+  // Estados locales para la información dinámica
   const [datos, setDatos] = useState([]);
   const [reports, setReports] = useState([]);
   const [courses, setCourses] = useState([]);
   const [category, setCategory] = useState([]);
   const [pendientes, setPendientes] = useState([]);
 
+  // Carga asíncrona de datos desde la API
   useEffect(() => {
     async function traerDatos() {
       try {
         const response = await dashboard();
         const data = await reportes();
+        
         setDatos(response.users);
         setReports(response.reports);
         setCourses(response.top_courses);
         setCategory(response.top_categories);
         setPendientes(data.items);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error("Error cargando métricas en el dashboard:", err);
       }
     }
     traerDatos();
   }, []);
 
-  const navItems = [
+  const location = useLocation();
 
+  // Enlaces de navegación para el sidebar
+  const navItems = [
     { label: "Categories", icon: "category", path: "/admin/categories" },
     { label: "Courses", icon: "school", path: "/admin/courses" },
-
     { label: "Dashboard", icon: "dashboard", path: "/dashboard-admin" },
     { label: "Student Records", icon: "group", path: "/students" },
     { label: "Reports Queue", icon: "assignment_late", path: "/reports" },
@@ -59,34 +63,35 @@ function DashboardAdmin() {
     { label: "Settings", icon: "settings", path: "/settings" },
   ];
 
-  const location = useLocation();
-
+  // Mapeo dinámico de tarjetas utilizando el estado actualizado de la API
   const statsCards = [
     {
       title: "Estudiantes",
-      value: datos.total_students,
+      value: datos.total_students || 0,
       change: "0 estudiantes nuevos",
       icon: "group",
       iconColor: "bg-primary-container text-on-primary-container",
     },
     {
       title: "Total Reportes",
-      value: reports.total,
-      change: `${reports.pending} reportes pendientes`,
+      value: reports.total || 0,
+      change: `${reports.pending || 0} reportes pendientes`,
       icon: "assignment_late",
       iconColor: "bg-error-container text-on-error-container",
     },
     {
       title: "Cursos Activos",
-      value: courses.length,
+      value: courses.length || 0,
       change: "3 cursos nuevos en proceso",
       icon: "school",
       iconColor: "bg-secondary-container text-on-secondary-container",
     },
     {
       title: "Categorías Activas",
-      value: category.length,
-      change: `${category[0]?.name}, ${category[1]?.name}, etc..`,
+      value: category.length || 0,
+      change: category.length > 0 
+        ? `${category[0]?.name || ""}, ${category[1]?.name || ""}, etc...` 
+        : "Sin categorías registradas",
       icon: "category",
       iconColor: "bg-surface-container-highest text-on-surface-variant",
     },
@@ -96,9 +101,11 @@ function DashboardAdmin() {
     <div className="flex flex-col h-screen overflow-hidden bg-background text-on-background">
       {/* Header Fijo */}
       <Header />
+      
       {/* Contenedor del Layout - pt-16 compensa exactamente el alto del Header (h-16) */}
       <div className="flex flex-1 pt-16 overflow-hidden">
-        {/* Navigation Drawer (Desktop) - Alto dinámico exacto sin mt extra */}
+        
+        {/* Navigation Drawer (Desktop) */}
         <aside className="hidden md:flex flex-col h-[calc(100vh-64px)] w-72 bg-surface-container-low border-r border-outline-variant py-md z-30 shrink-0">
           <nav className="flex-1 space-y-1">
             {navItems.map((item, index) => {
@@ -126,8 +133,8 @@ function DashboardAdmin() {
 
         {/* Main Content Area - Scroll independiente */}
         <div className="flex-1 flex flex-col h-[calc(100vh-64px)] overflow-y-auto min-w-0">
-          {/* Main Section */}
           <main className="flex-1 px-margin-mobile py-stack-lg md:px-margin-desktop md:py-stack-lg space-y-lg max-w-7xl mx-auto w-full mb-24 md:mb-0">
+            
             {/* Welcome Section */}
             <section className="flex flex-col md:flex-row md:items-end justify-between gap-md">
               <div>
@@ -151,9 +158,7 @@ function DashboardAdmin() {
                     <span className="text-body-sm font-semibold text-on-surface-variant">
                       {card.title}
                     </span>
-                    <div
-                      className={`p-2 rounded-xl flex items-center justify-center ${card.iconColor}`}
-                    >
+                    <div className={`p-2 rounded-xl flex items-center justify-center ${card.iconColor}`}>
                       <span className="material-symbols-outlined text-body-lg">
                         {card.icon}
                       </span>
@@ -189,7 +194,7 @@ function DashboardAdmin() {
               </div>
 
               <div className="grid grid-cols-1 gap-stack-sm mt-4">
-                {pendientes
+                {pendientes && pendientes
                   .filter((report) => report.status === "PENDING")
                   .map((report, index) => (
                     <div
@@ -204,11 +209,11 @@ function DashboardAdmin() {
                           </span>
                           <span className="text-outline-variant">•</span>
                           <span className="text-body-sm font-semibold text-on-surface">
-                            {report.student.document_number}
+                            {report.student?.document_number}
                           </span>
                           <span className="text-outline-variant">•</span>
                           <span className="text-body-sm text-on-surface-variant">
-                            {report.category.name}
+                            {report.category?.name}
                           </span>
                         </div>
                         <p className="text-body-md text-on-surface line-clamp-1">

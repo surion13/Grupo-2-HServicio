@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -7,6 +7,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { useToast } from "../../hooks/useToast";
 
 export default function Login() {
+    const navigate = useNavigate();
+    
     // Rafa: Consumo del hook global de notificaciones
     const { showToast } = useToast();
 
@@ -20,11 +22,14 @@ export default function Login() {
     
     //Agregando logica try catch para que las Toast notifications funcionen dinamicamente
     async function handleSubmit(e) {
-        e.preventDefault()
+        e.preventDefault();
         try {
-            await login(email, password)
+            await login(email, password);
             // Si el login es exitoso, disparamos un Toast de éxito (verde)
             showToast("¡Inicio de sesión exitoso! Bienvenido.", "success");
+            
+            // Redirección tras inicio de sesión exitoso
+            navigate("/redirect");
         } catch (error) {
             // Extraemos el mensaje real que viene desde funvalApi ("Invalid email or password")
             const apiMessage = error.response?.data?.detail || "Credenciales incorrectas";
@@ -32,9 +37,8 @@ export default function Login() {
             // CRÍTICO: Pasamos explícitamente el tipo "error" para que se pinte de color rojo
             showToast(apiMessage, "error");
         }
-        
-        
     }
+
     // Rafa: Función para autocompletar credenciales de prueba
     const selectTestCredentials = (testEmail, testPassword) => {
         setEmail(testEmail);
@@ -42,9 +46,7 @@ export default function Login() {
         showToast("Credenciales de prueba cargadas", "success");
     };
 
-    //const showPassword = () => document.querySelector("#password").textContent = password 
-
-    //Rafa: modificando visbilidad de password para que se actualice:
+    // Rafa: modificando visibilidad de password para que se actualice:
     const togglePasswordVisibility = () => {
         setIsPasswordVisible((prev) => !prev);
     };
@@ -94,8 +96,8 @@ export default function Login() {
                                     <span className="material-symbols-outlined text-[20px]">lock</span>
                                 </div>
 
-                                <input value={password} onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type={isPasswordVisible ? "text" : "password"}/>{/* Cambiando el tipo de boton de password a button para que funcione la opcion de ocultar/mostrar el pw */}
-                                {/* usando la funcion toggle */}
+                                <input value={password} onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type={isPasswordVisible ? "text" : "password"}/>
+                                
                                 <button onClick={togglePasswordVisibility} className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button">
                                     <span className="material-symbols-outlined text-[20px]" id="password-toggle-icon">{isPasswordVisible ? "visibility_off" :"visibility"}</span>
                                 </button>
@@ -112,7 +114,7 @@ export default function Login() {
                         </div>
 
                         {/* <!-- Submit Button --> */}
-                        <button className="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+                        <button className="cursor-pointer w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
                             {loading ? <span className="text-base">Espere estamos cargando</span>
                             :   <>
                                     <span>Entrar</span>
@@ -173,5 +175,5 @@ export default function Login() {
                 </div>
             </footer>
         </article>
-    )
+    );
 }

@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import {useAuth} from '../../hooks/useAuth'//Rafa: llamando al hook para log out
-
+import { useAuth } from '../../hooks/useAuth'; // Llamando al hook personalizado
 
 function Header() {
   const [darkMode, setDarkMode] = useState(false);
 
-  //Rafa: extraemos el usuario y la funcion logout 
-  const {user, logout}=useAuth()
+  // Extraemos el usuario y la función logout desde el hook de forma limpia
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -25,14 +24,14 @@ function Header() {
           {/* Se añade "md:hidden" para que el botón desaparezca en desktop */}
           <button
             className="material-symbols-outlined text-primary cursor-pointer md:hidden"
-            style={{ display: window.innerWidth >= 768 ? "none" : "block" }} // Solo si Tailwind v4 tiene problemas de compilación en tu entorno
+            style={{ display: window.innerWidth >= 768 ? "none" : "block" }}
           >
             menu
           </button>
           <h1 className="text-headline-md font-bold text-primary">Funval</h1>
         </div>
 
-        <div className="flex items-center gap-md">
+        <div className="flex items-center gap-4">
           {/* Botón de cambio de tema (Sol / Luna) */}
           <button
             onClick={() => setDarkMode(!darkMode)}
@@ -42,7 +41,7 @@ function Header() {
             {darkMode ? "light_mode" : "dark_mode"}
           </button>
 
-          {/* Rafa: Usamos 'user' para mostrar el correo/nombre y solucionar el warning */}
+          {/* Se muestra el nombre/correo si el usuario existe */}
           {user && (
             <span className="text-body-medium font-medium text-on-surface hidden sm:inline">
               {user}
@@ -52,13 +51,13 @@ function Header() {
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
             <img
               className="w-full h-full object-cover"
-              alt="Alejandro's profile portrait"
+              alt="User profile portrait"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCMWPecmMLNvge6tCUWWlnibQESmiANPvAZlKtvkqvU9eZW0kHOeQR9Q_VmPBAAlFfs9K262QX7YrE50dWlrH24CB-VSaCBs-X0HZr5lOKU4F1JpI5TrnYdbN7i2WeTp7Vj690zJqnxkK56Mym8vzdYlLzj1tv5pjw8is7lq45Hg2xdE6noXF7fRRjcAUe8rmZ06qFShFzwLAubMClIpYzIdCwW19LBiQdLH4UWSQGIqveHUNqOkXekmaMWKATIly0xJBiaOQe3ys"
             />
-            {/* Rafa: Boton de salida con Google Material symbols */}
-
           </div>
-                      <button
+
+          {/* Botón de salida estilizado de main */}
+          <button
             onClick={logout}
             className="material-symbols-outlined text-error hover:bg-error-container hover:text-on-error-container cursor-pointer p-xs rounded-full transition-colors"
             title="Cerrar Sesión"
