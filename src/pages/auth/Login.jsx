@@ -1,21 +1,27 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function Login() {
+    const navigate = useNavigate()
+    const { error, loading, login } = useContext(AuthContext)
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    const { loading, error, login } = useContext(AuthContext);
     
     async function handleSubmit(e) {
         e.preventDefault()
         
-        await login(email, password)
-    }
+        try {
+            await login(email, password);
+        
+            navigate("/redirect")
 
-    const showPassword = () => document.querySelector("#password").textContent = password 
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     return (
         <article className="font-sans min-h-screen flex flex-col bg-background text-on-background">
@@ -64,7 +70,7 @@ export default function Login() {
 
                                 <input onChange={e => setPassword(e.target.value)} className="block w-full pl-10 pr-12 py-3 border border-outline rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all font-body-md text-body-md outline-none" id="password" name="password" placeholder="••••••••" required="" type="password"/>
                                 
-                                <button onClick={showPassword} className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button">
+                                <button className="cursor-pointer absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors" type="button">
                                     <span className="material-symbols-outlined text-[20px]" id="password-toggle-icon">visibility</span>
                                 </button>
                             </div>
@@ -80,7 +86,7 @@ export default function Login() {
                         </div>
 
                         {/* <!-- Submit Button --> */}
-                        <button className="w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
+                        <button className="cursor-pointer w-full bg-primary text-on-primary py-3 rounded-lg font-label-md text-label-md hover:bg-opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
                             {loading ? <span className="text-base">Espere estamos cargando</span>
                             :   <>
                                     <span>Entrar</span>

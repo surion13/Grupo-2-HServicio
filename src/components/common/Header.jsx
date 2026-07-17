@@ -1,6 +1,9 @@
+import { useContext } from "react"
+import { AuthContext } from "../../context/AuthContext"
 import { useState, useEffect } from "react";
 
 function Header() {
+  const { logout } = useContext(AuthContext)
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -23,7 +26,7 @@ function Header() {
           <h1 className="text-headline-md font-bold text-primary">Funval</h1>
         </div>
 
-        <div className="flex items-center gap-md">
+        <div className="flex items-center gap-4">
           {/* Botón de cambio de tema (Sol / Luna) */}
           <button
             onClick={() => setDarkMode(!darkMode)}
@@ -40,6 +43,8 @@ function Header() {
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCMWPecmMLNvge6tCUWWlnibQESmiANPvAZlKtvkqvU9eZW0kHOeQR9Q_VmPBAAlFfs9K262QX7YrE50dWlrH24CB-VSaCBs-X0HZr5lOKU4F1JpI5TrnYdbN7i2WeTp7Vj690zJqnxkK56Mym8vzdYlLzj1tv5pjw8is7lq45Hg2xdE6noXF7fRRjcAUe8rmZ06qFShFzwLAubMClIpYzIdCwW19LBiQdLH4UWSQGIqveHUNqOkXekmaMWKATIly0xJBiaOQe3ys"
             />
           </div>
+
+          <button onClick={logout} className="cursor-pointer text-primary hover:underline">Cerrar Sesión</button>
         </div>
       </header>
     </div>

@@ -1,62 +1,67 @@
-
 import { useState, createContext } from "react";
-import useApi from "../hooks/useApi";
-import { authService, profileService } from "../services/funvalApi";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { authService } from "../services/authService";
+import { api } from "../services/api";
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-    const navigate = useNavigate();
-    const { loading, error, execute: loginExecute } = useApi(authService.login)
-    const { execute: authExecute } = useApi(profileService.getMe)
-    const {execute: cerrarSesion} = useApi(authService.logout)
-    
-    const [auth, setAuth] = useState(null);
     const [user, setUser] = useState(null);
-    const [role, setRole] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    async function login(email, password) {
+    const checkAuth = async () => {
+        
+        setError(null)
+        setLoading(true)
+        
         try {
-            const apiLogin = await loginExecute(email, password)
+            const response = await api.get("/api/v1/profile/me")
             
-            if(!apiLogin) return
-            
-            const authme = await authExecute(apiLogin.access_token)
+            setUser(response.data)
 
-            if(!authme) return
+        } catch(err) {
 
-            setUser(authme.email)
-            setRole(authme.role)
+            setUser(null)
+            setError(err.message)
 
-            setAuth(authme)
+        } finally {
+            setLoading(false)
+        }
+    }
 
-            if (authme.role === "ADMIN") {
-                navigate("/dashboard-admin")
-            } else {
-                navigate("/dashboard-student")
-            }
+    const login = async (email, password) => {
+        
+        setError(null)
+
+        try {
+            await authService.login(email, password);
+              
+            await checkAuth()
 
         } catch (error) {
-            console.error("error al loguear: ", error)
+            console.error(error.response?.data?.detail)
+            setError("Error al loguearse")
+            throw error
+
+        } finally {
+            setLoading(false)
         }
     }
 
-    const isAuthenticated = () => {
-        if (auth) {
-            return true
-        } else {
-            return navigate("/login");
-        }
+    const logout = async () => {    
+        await authService.logout()
+        setUser(null)
     }
 
-    const logout = () => {
-        setAuth(null)
-        cerrarSesion()
-        navigate("/login")
-    }
+    useEffect(() => {
+        
+        checkAuth();
+        
+    }, []);
 
-    const value = { user, role, loading, error, isAuthenticated, login, logout }
+    
+    const value = { user, loading, error, login, logout, isAuthenticated: Boolean(user)}
 
     return (
         <AuthContext.Provider value={value}>
