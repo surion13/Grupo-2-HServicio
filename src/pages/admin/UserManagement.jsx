@@ -219,7 +219,7 @@ export default function UserManagment() {
               {/* Pagination Desktop */}
               <div className="px-lg py-md bg-surface-container-low flex justify-between items-center border-t border-outline-variant">
                 <span className="text-body-sm text-on-surface-variant">
-                  Mostrando 1-5 de 124 usuarios
+                  Mostrando 1-10 de {users} usuarios
                 </span>
                 <div className="flex items-center gap-xs">
                   <button

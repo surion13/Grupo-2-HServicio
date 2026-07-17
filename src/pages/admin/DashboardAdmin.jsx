@@ -123,7 +123,7 @@ function DashboardAdmin() {
             })}
           </nav>
         </aside>
-
+        {console.log(category)}
         {/* Main Content Area - Scroll independiente */}
         <div className="flex-1 flex flex-col h-[calc(100vh-64px)] overflow-y-auto min-w-0">
           {/* Main Section */}
@@ -131,9 +131,6 @@ function DashboardAdmin() {
             {/* Welcome Section */}
             <section className="flex flex-col md:flex-row md:items-end justify-between gap-md">
               <div>
-                <p className="text-body-md font-body-md text-on-surface-variant">
-                  Welcome back, Admin
-                </p>
                 <h2 className="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-on-surface">
                   Overview for today
                 </h2>
