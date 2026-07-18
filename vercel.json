@@ -4,7 +4,5 @@
       "source": "/api/:path*",
       "destination": "https://www.hs-api.devfunval.cloud/api/:path*"
     }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  ]
 }

@@ -129,7 +129,7 @@ export const courseService = {
 // 8. Módulo de Reportes (Reports)
 export const reportService = {
     submit: async (formData) => {
-        const response = await funvalServices.post(`${ENDPOINTS.REPORTS}/`, formData, {
+        const response = await funvalServices.post(`${ENDPOINTS.REPORTS}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data' 
             }
@@ -137,7 +137,7 @@ export const reportService = {
         return response.data
     },
     list: async () => {
-        const response = await funvalServices.get(`${ENDPOINTS.REPORTS}/`)
+        const response = await funvalServices.get(`${ENDPOINTS.REPORTS}`)
         return response.data
     },
     update: async (reportId, formData) => {
