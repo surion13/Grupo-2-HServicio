@@ -40,8 +40,8 @@ function AuthProvider({ children }) {
             await checkAuth()
 
         } catch (error) {
-            console.error(error.response?.data?.detail)
-            setError("Error al loguearse")
+            const mensaje = error.response?.data?.message || error.response?.data?.detail || "Error al iniciar sesión";
+            setError(mensaje)
             throw error
 
         } finally {
